@@ -1,0 +1,1011 @@
+2022-12-10 16:41:21,820|INFO   |   logconfig.py| 27|Logger initialized, input filtering at level 10 to file pynamo.log
+2022-12-10 16:42:09,028|INFO   |   logconfig.py| 27|Logger initialized, input filtering at level 10 to file pynamo.log
+2022-12-10 16:42:09,038|INFO   | test_dynamo.py| 33|Reset for next test
+2022-12-10 16:42:09,039|DEBUG  |        node.py| 45|Create node A
+2022-12-10 16:42:09,039|DEBUG  |        node.py| 45|Create node B
+2022-12-10 16:42:09,039|DEBUG  |        node.py| 45|Create node C
+2022-12-10 16:42:09,039|DEBUG  |        node.py| 45|Create node D
+2022-12-10 16:42:09,039|DEBUG  |        node.py| 45|Create node E
+2022-12-10 16:42:09,039|DEBUG  |        node.py| 45|Create node F
+2022-12-10 16:42:09,039|DEBUG  |        node.py| 45|Create node a
+2022-12-10 16:42:09,039|INFO   |   framework.py| 42|Enqueue a->A: ClientPut(K1=1)
+2022-12-10 16:42:09,039|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 0 (limit 32768) pending timers
+2022-12-10 16:42:09,039|INFO   |   framework.py|112|Dequeue a->A: ClientPut(K1=1)
+2022-12-10 16:42:09,039|INFO   |     dynamo1.py| 60|put(K1=1) maps to [<dynamo1.DynamoNode object at 0x10569d608>, <dynamo1.DynamoNode object at 0x10569d048>, <dynamo1.DynamoNode object at 0x10525bd48>]
+2022-12-10 16:42:09,039|INFO   |   framework.py| 83|Enqueue(fwd) A->D: ClientPut(K1=1)
+2022-12-10 16:42:09,039|INFO   |   framework.py|112|Dequeue a->D: ClientPut(K1=1)
+2022-12-10 16:42:09,039|INFO   |     dynamo1.py| 67|D, 1: put K1=1
+2022-12-10 16:42:09,039|INFO   |   framework.py| 42|Enqueue D->D: PutReq(K1=1)
+2022-12-10 16:42:09,039|INFO   |   framework.py| 42|Enqueue D->B: PutReq(K1=1)
+2022-12-10 16:42:09,039|INFO   |   framework.py| 42|Enqueue D->C: PutReq(K1=1)
+2022-12-10 16:42:09,039|INFO   |   framework.py|112|Dequeue D->D: PutReq(K1=1)
+2022-12-10 16:42:09,039|INFO   |     dynamo1.py|106|D: store K1=1
+2022-12-10 16:42:09,039|INFO   |   framework.py| 42|Enqueue D->D: PutRsp(K1=1)
+2022-12-10 16:42:09,039|INFO   |   framework.py|112|Dequeue D->B: PutReq(K1=1)
+2022-12-10 16:42:09,039|INFO   |     dynamo1.py|106|B: store K1=1
+2022-12-10 16:42:09,039|INFO   |   framework.py| 42|Enqueue B->D: PutRsp(K1=1)
+2022-12-10 16:42:09,039|INFO   |   framework.py|112|Dequeue D->C: PutReq(K1=1)
+2022-12-10 16:42:09,039|INFO   |     dynamo1.py|106|C: store K1=1
+2022-12-10 16:42:09,039|INFO   |   framework.py| 42|Enqueue C->D: PutRsp(K1=1)
+2022-12-10 16:42:09,039|INFO   |   framework.py|112|Dequeue D->D: PutRsp(K1=1)
+2022-12-10 16:42:09,039|INFO   |   framework.py|112|Dequeue B->D: PutRsp(K1=1)
+2022-12-10 16:42:09,039|INFO   |     dynamo1.py|117|D: written 2 copies of K1=1 so done
+2022-12-10 16:42:09,039|DEBUG  |     dynamo1.py|118|  copies at ['D', 'B']
+2022-12-10 16:42:09,039|INFO   |   framework.py| 42|Enqueue D->a: ClientPutRsp(K1=1)
+2022-12-10 16:42:09,040|INFO   |   framework.py|112|Dequeue C->D: PutRsp(K1=1)
+2022-12-10 16:42:09,040|INFO   |   framework.py|112|Dequeue D->a: ClientPutRsp(K1=1)
+2022-12-10 16:42:09,040|INFO   | test_dynamo.py| 42|Reset after last test
+2022-12-10 16:42:19,157|INFO   |   logconfig.py| 27|Logger initialized, input filtering at level 10 to file pynamo.log
+2022-12-10 16:42:19,159|INFO   | test_dynamo.py| 33|Reset for next test
+2022-12-10 16:42:19,159|DEBUG  |        node.py| 45|Create node A
+2022-12-10 16:42:19,171|DEBUG  |       timer.py| 41|Start timer 4342403848 prio 15 for node A reason retry
+2022-12-10 16:42:19,171|DEBUG  |        node.py| 45|Create node B
+2022-12-10 16:42:19,183|DEBUG  |       timer.py| 41|Start timer 4349763912 prio 15 for node B reason retry
+2022-12-10 16:42:19,183|DEBUG  |        node.py| 45|Create node C
+2022-12-10 16:42:19,195|DEBUG  |       timer.py| 41|Start timer 4354681736 prio 15 for node C reason retry
+2022-12-10 16:42:19,195|DEBUG  |        node.py| 45|Create node D
+2022-12-10 16:42:19,215|DEBUG  |       timer.py| 41|Start timer 4359616520 prio 15 for node D reason retry
+2022-12-10 16:42:19,215|DEBUG  |        node.py| 45|Create node E
+2022-12-10 16:42:19,227|DEBUG  |       timer.py| 41|Start timer 4364562632 prio 15 for node E reason retry
+2022-12-10 16:42:19,227|DEBUG  |        node.py| 45|Create node F
+2022-12-10 16:42:19,239|DEBUG  |       timer.py| 41|Start timer 4369494728 prio 15 for node F reason retry
+2022-12-10 16:42:19,239|DEBUG  |        node.py| 45|Create node a
+2022-12-10 16:42:19,239|DEBUG  |        node.py| 45|Create node b
+2022-12-10 16:42:19,239|INFO   |   framework.py| 42|Enqueue a->D: ClientGet(K1=?)
+2022-12-10 16:42:19,239|DEBUG  |       timer.py| 41|Start timer 4369496136 prio 17 for node a reason ClientGet(K1=?)
+2022-12-10 16:42:19,239|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 0) pending timers
+2022-12-10 16:42:19,239|INFO   |   framework.py|112|Dequeue a->D: ClientGet(K1=?)
+2022-12-10 16:42:19,239|INFO   |   framework.py| 42|Enqueue D->D: GetReq(K1=?)
+2022-12-10 16:42:19,239|DEBUG  |       timer.py| 41|Start timer 4369498056 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 16:42:19,239|INFO   |   framework.py| 42|Enqueue D->B: GetReq(K1=?)
+2022-12-10 16:42:19,239|DEBUG  |       timer.py| 41|Start timer 4369496776 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 16:42:19,239|INFO   |   framework.py| 42|Enqueue D->C: GetReq(K1=?)
+2022-12-10 16:42:19,239|DEBUG  |       timer.py| 41|Start timer 4369495624 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 16:42:19,239|INFO   |   framework.py|112|Dequeue D->D: GetReq(K1=?)
+2022-12-10 16:42:19,239|INFO   |      dynamo.py|220|D: retrieve K1=?
+2022-12-10 16:42:19,239|INFO   |   framework.py| 42|Enqueue D->D: GetRsp(K1=None@None)
+2022-12-10 16:42:19,239|INFO   |   framework.py|112|Dequeue D->B: GetReq(K1=?)
+2022-12-10 16:42:19,239|INFO   |      dynamo.py|220|B: retrieve K1=?
+2022-12-10 16:42:19,239|INFO   |   framework.py| 42|Enqueue B->D: GetRsp(K1=None@None)
+2022-12-10 16:42:19,240|INFO   |   framework.py|112|Dequeue D->C: GetReq(K1=?)
+2022-12-10 16:42:19,240|INFO   |      dynamo.py|220|C: retrieve K1=?
+2022-12-10 16:42:19,240|INFO   |   framework.py| 42|Enqueue C->D: GetRsp(K1=None@None)
+2022-12-10 16:42:19,240|INFO   |   framework.py|112|Dequeue D->D: GetRsp(K1=None@None)
+2022-12-10 16:42:19,240|DEBUG  |       timer.py| 55|Cancel timer 4369498056 for node D reason GetReq(K1=?)
+2022-12-10 16:42:19,240|INFO   |   framework.py|112|Dequeue B->D: GetRsp(K1=None@None)
+2022-12-10 16:42:19,240|DEBUG  |       timer.py| 55|Cancel timer 4369496776 for node D reason GetReq(K1=?)
+2022-12-10 16:42:19,240|INFO   |      dynamo.py|231|D: read 2 copies of K1=? so done
+2022-12-10 16:42:19,240|DEBUG  |      dynamo.py|232|  copies at [('D', None), ('B', None)]
+2022-12-10 16:42:19,240|INFO   |   framework.py| 42|Enqueue D->a: ClientGetRsp(K1=[None]@[{}])
+2022-12-10 16:42:19,240|INFO   |   framework.py|112|Dequeue C->D: GetRsp(K1=None@None)
+2022-12-10 16:42:19,240|DEBUG  |       timer.py| 55|Cancel timer 4369495624 for node D reason GetReq(K1=?)
+2022-12-10 16:42:19,240|INFO   |   framework.py|112|Dequeue D->a: ClientGetRsp(K1=[None]@[{}])
+2022-12-10 16:42:19,240|DEBUG  |       timer.py| 55|Cancel timer 4369496136 for node a reason ClientGet(K1=?)
+2022-12-10 16:42:19,240|INFO   |   framework.py| 42|Enqueue a->D: ClientPut(K1=1@{})
+2022-12-10 16:42:19,240|DEBUG  |       timer.py| 41|Start timer 4369495496 prio 17 for node a reason ClientPut(K1=1@{})
+2022-12-10 16:42:19,240|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 0) pending timers
+2022-12-10 16:42:19,240|INFO   |   framework.py|112|Dequeue a->D: ClientPut(K1=1@{})
+2022-12-10 16:42:19,240|INFO   |      dynamo.py|138|D, 2: put K1=1
+2022-12-10 16:42:19,240|INFO   |   framework.py| 42|Enqueue D->D: PutReq(K1=1@{D:2})
+2022-12-10 16:42:19,240|DEBUG  |       timer.py| 41|Start timer 4369496648 prio 20 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 16:42:19,240|INFO   |   framework.py| 42|Enqueue D->B: PutReq(K1=1@{D:2})
+2022-12-10 16:42:19,240|DEBUG  |       timer.py| 41|Start timer 4369495240 prio 20 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 16:42:19,240|INFO   |   framework.py| 42|Enqueue D->C: PutReq(K1=1@{D:2})
+2022-12-10 16:42:19,240|DEBUG  |       timer.py| 41|Start timer 4369497032 prio 20 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 16:42:19,240|INFO   |   framework.py|112|Dequeue D->D: PutReq(K1=1@{D:2})
+2022-12-10 16:42:19,240|INFO   |      dynamo.py|188|D: store K1=1
+2022-12-10 16:42:19,240|INFO   |   framework.py| 42|Enqueue D->D: PutRsp(K1=1@{D:2})
+2022-12-10 16:42:19,240|INFO   |   framework.py|112|Dequeue D->B: PutReq(K1=1@{D:2})
+2022-12-10 16:42:19,240|INFO   |      dynamo.py|188|B: store K1=1
+2022-12-10 16:42:19,240|INFO   |   framework.py| 42|Enqueue B->D: PutRsp(K1=1@{D:2})
+2022-12-10 16:42:19,240|INFO   |   framework.py|112|Dequeue D->C: PutReq(K1=1@{D:2})
+2022-12-10 16:42:19,240|INFO   |      dynamo.py|188|C: store K1=1
+2022-12-10 16:42:19,240|INFO   |   framework.py| 42|Enqueue C->D: PutRsp(K1=1@{D:2})
+2022-12-10 16:42:19,240|INFO   |   framework.py|112|Dequeue D->D: PutRsp(K1=1@{D:2})
+2022-12-10 16:42:19,240|DEBUG  |       timer.py| 55|Cancel timer 4369496648 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 16:42:19,240|INFO   |   framework.py|112|Dequeue B->D: PutRsp(K1=1@{D:2})
+2022-12-10 16:42:19,240|DEBUG  |       timer.py| 55|Cancel timer 4369495240 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 16:42:19,240|INFO   |      dynamo.py|205|D: written 2 copies of K1=1 so done
+2022-12-10 16:42:19,241|DEBUG  |      dynamo.py|206|  copies at ['D', 'B']
+2022-12-10 16:42:19,241|INFO   |   framework.py| 42|Enqueue D->a: ClientPutRsp(K1=1@{D:2})
+2022-12-10 16:42:19,241|INFO   |   framework.py|112|Dequeue C->D: PutRsp(K1=1@{D:2})
+2022-12-10 16:42:19,241|DEBUG  |       timer.py| 55|Cancel timer 4369497032 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 16:42:19,241|INFO   |   framework.py|112|Dequeue D->a: ClientPutRsp(K1=1@{D:2})
+2022-12-10 16:42:19,241|DEBUG  |       timer.py| 55|Cancel timer 4369495496 for node a reason ClientPut(K1=1@{})
+2022-12-10 16:42:19,241|INFO   |   framework.py| 42|Enqueue a->D: ClientPut(K1=11@{D:2})
+2022-12-10 16:42:19,241|DEBUG  |       timer.py| 41|Start timer 4369503624 prio 17 for node a reason ClientPut(K1=11@{D:2})
+2022-12-10 16:42:19,241|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 2) pending timers
+2022-12-10 16:42:19,241|INFO   |   framework.py|112|Dequeue a->D: ClientPut(K1=11@{D:2})
+2022-12-10 16:42:19,241|INFO   |      dynamo.py|138|D, 3: put K1=11
+2022-12-10 16:42:19,241|INFO   |   framework.py| 42|Enqueue D->D: PutReq(K1=11@{D:3})
+2022-12-10 16:42:19,241|DEBUG  |       timer.py| 41|Start timer 4374435976 prio 20 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 16:42:19,241|INFO   |   framework.py| 42|Enqueue D->B: PutReq(K1=11@{D:3})
+2022-12-10 16:42:19,241|DEBUG  |       timer.py| 41|Start timer 4374436808 prio 20 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 16:42:19,241|INFO   |   framework.py| 42|Enqueue D->C: PutReq(K1=11@{D:3})
+2022-12-10 16:42:19,241|DEBUG  |       timer.py| 41|Start timer 4374437128 prio 20 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 16:42:19,241|INFO   |   framework.py|112|Dequeue D->D: PutReq(K1=11@{D:3})
+2022-12-10 16:42:19,241|INFO   |      dynamo.py|188|D: store K1=11
+2022-12-10 16:42:19,241|INFO   |   framework.py| 42|Enqueue D->D: PutRsp(K1=11@{D:3})
+2022-12-10 16:42:19,241|INFO   |   framework.py|109|Drop D->B: PutReq(K1=11@{D:3}) as route down
+2022-12-10 16:42:19,241|INFO   |   framework.py|109|Drop D->C: PutReq(K1=11@{D:3}) as route down
+2022-12-10 16:42:19,241|INFO   |   framework.py|112|Dequeue D->D: PutRsp(K1=11@{D:3})
+2022-12-10 16:42:19,241|DEBUG  |       timer.py| 55|Cancel timer 4374435976 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 16:42:19,241|DEBUG  |       timer.py| 67|Pop timer 4374436808 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 16:42:19,241|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node D
+2022-12-10 16:42:19,241|INFO   |      dynamo.py| 98|Node D now treating node B as failed
+2022-12-10 16:42:19,241|INFO   |   framework.py| 42|Enqueue D->F: PutReq(K1=11@{D:3})
+2022-12-10 16:42:19,241|DEBUG  |       timer.py| 41|Start timer 4374437704 prio 20 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 16:42:19,241|INFO   |   framework.py|101|Start of schedule: 1 (limit 32763) pending messages, 9 (limit 1) pending timers
+2022-12-10 16:42:19,241|INFO   |   framework.py|112|Dequeue D->F: PutReq(K1=11@{D:3})
+2022-12-10 16:42:19,241|INFO   |      dynamo.py|188|F: store K1=11
+2022-12-10 16:42:19,241|INFO   |   framework.py| 42|Enqueue F->D: PutRsp(K1=11@{D:3})
+2022-12-10 16:42:19,241|INFO   |   framework.py|112|Dequeue F->D: PutRsp(K1=11@{D:3})
+2022-12-10 16:42:19,241|DEBUG  |       timer.py| 55|Cancel timer 4374437704 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 16:42:19,241|INFO   |      dynamo.py|205|D: written 2 copies of K1=11 so done
+2022-12-10 16:42:19,241|DEBUG  |      dynamo.py|206|  copies at ['D', 'F']
+2022-12-10 16:42:19,241|INFO   |   framework.py| 42|Enqueue D->a: ClientPutRsp(K1=11@{D:3})
+2022-12-10 16:42:19,241|INFO   |   framework.py|112|Dequeue D->a: ClientPutRsp(K1=11@{D:3})
+2022-12-10 16:42:19,242|DEBUG  |       timer.py| 55|Cancel timer 4369503624 for node a reason ClientPut(K1=11@{D:2})
+2022-12-10 16:42:19,242|DEBUG  |       timer.py| 67|Pop timer 4374437128 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 16:42:19,242|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node D
+2022-12-10 16:42:19,242|INFO   |      dynamo.py| 98|Node D now treating node C as failed
+2022-12-10 16:42:19,242|INFO   |   framework.py| 42|Enqueue b->D: ClientGet(K1=?)
+2022-12-10 16:42:19,242|DEBUG  |       timer.py| 41|Start timer 4374435592 prio 17 for node b reason ClientGet(K1=?)
+2022-12-10 16:42:19,242|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 1) pending timers
+2022-12-10 16:42:19,242|INFO   |   framework.py|109|Drop b->D: ClientGet(K1=?) as route down
+2022-12-10 16:42:19,242|DEBUG  |       timer.py| 67|Pop timer 4374435592 for node b reason ClientGet(K1=?)
+2022-12-10 16:42:19,242|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node b
+2022-12-10 16:42:19,242|INFO   |      dynamo.py|311|Get request timed out; retrying
+2022-12-10 16:42:19,242|INFO   |   framework.py| 42|Enqueue b->A: ClientGet(K1=?)
+2022-12-10 16:42:19,242|DEBUG  |       timer.py| 41|Start timer 4374488264 prio 17 for node b reason ClientGet(K1=?)
+2022-12-10 16:42:19,242|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 1) pending timers
+2022-12-10 16:42:19,242|INFO   |   framework.py|112|Dequeue b->A: ClientGet(K1=?)
+2022-12-10 16:42:19,242|INFO   |      dynamo.py|168|get(K1=?) maps to [<dynamo.DynamoNode object at 0x1038f2f88>, <dynamo.DynamoNode object at 0x103442788>, <dynamo.DynamoNode object at 0x1034424c8>]
+2022-12-10 16:42:19,242|INFO   |   framework.py| 83|Enqueue(fwd) A->D: ClientGet(K1=?)
+2022-12-10 16:42:19,242|INFO   |   framework.py|109|Drop b->D: ClientGet(K1=?) as route down
+2022-12-10 16:42:19,242|DEBUG  |       timer.py| 67|Pop timer 4374488264 for node b reason ClientGet(K1=?)
+2022-12-10 16:42:19,242|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node b
+2022-12-10 16:42:19,242|INFO   |      dynamo.py|311|Get request timed out; retrying
+2022-12-10 16:42:19,242|INFO   |   framework.py| 42|Enqueue b->C: ClientGet(K1=?)
+2022-12-10 16:42:19,242|DEBUG  |       timer.py| 41|Start timer 4374488712 prio 17 for node b reason ClientGet(K1=?)
+2022-12-10 16:42:19,242|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 1) pending timers
+2022-12-10 16:42:19,242|INFO   |   framework.py|112|Dequeue b->C: ClientGet(K1=?)
+2022-12-10 16:42:19,242|INFO   |   framework.py| 42|Enqueue C->D: GetReq(K1=?)
+2022-12-10 16:42:19,242|DEBUG  |       timer.py| 41|Start timer 4374489224 prio 20 for node C reason GetReq(K1=?)
+2022-12-10 16:42:19,242|INFO   |   framework.py| 42|Enqueue C->B: GetReq(K1=?)
+2022-12-10 16:42:19,242|DEBUG  |       timer.py| 41|Start timer 4374489544 prio 20 for node C reason GetReq(K1=?)
+2022-12-10 16:42:19,242|INFO   |   framework.py| 42|Enqueue C->C: GetReq(K1=?)
+2022-12-10 16:42:19,242|DEBUG  |       timer.py| 41|Start timer 4374489864 prio 20 for node C reason GetReq(K1=?)
+2022-12-10 16:42:19,242|INFO   |   framework.py|109|Drop C->D: GetReq(K1=?) as route down
+2022-12-10 16:42:19,242|INFO   |   framework.py|112|Dequeue C->B: GetReq(K1=?)
+2022-12-10 16:42:19,242|INFO   |      dynamo.py|220|B: retrieve K1=?
+2022-12-10 16:42:19,242|INFO   |   framework.py| 42|Enqueue B->C: GetRsp(K1=1@{D:2})
+2022-12-10 16:42:19,242|INFO   |   framework.py|112|Dequeue C->C: GetReq(K1=?)
+2022-12-10 16:42:19,242|INFO   |      dynamo.py|220|C: retrieve K1=?
+2022-12-10 16:42:19,242|INFO   |   framework.py| 42|Enqueue C->C: GetRsp(K1=1@{D:2})
+2022-12-10 16:42:19,242|INFO   |   framework.py|112|Dequeue B->C: GetRsp(K1=1@{D:2})
+2022-12-10 16:42:19,242|DEBUG  |       timer.py| 55|Cancel timer 4374489544 for node C reason GetReq(K1=?)
+2022-12-10 16:42:19,242|INFO   |   framework.py|112|Dequeue C->C: GetRsp(K1=1@{D:2})
+2022-12-10 16:42:19,242|DEBUG  |       timer.py| 55|Cancel timer 4374489864 for node C reason GetReq(K1=?)
+2022-12-10 16:42:19,242|INFO   |      dynamo.py|231|C: read 2 copies of K1=? so done
+2022-12-10 16:42:19,242|DEBUG  |      dynamo.py|232|  copies at [('C', 1), ('B', 1)]
+2022-12-10 16:42:19,242|INFO   |   framework.py| 42|Enqueue C->b: ClientGetRsp(K1=[1]@[{D:2}])
+2022-12-10 16:42:19,242|INFO   |   framework.py|112|Dequeue C->b: ClientGetRsp(K1=[1]@[{D:2}])
+2022-12-10 16:42:19,242|DEBUG  |       timer.py| 55|Cancel timer 4374488712 for node b reason ClientGet(K1=?)
+2022-12-10 16:42:19,242|DEBUG  |       timer.py| 67|Pop timer 4374489224 for node C reason GetReq(K1=?)
+2022-12-10 16:42:19,242|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node C
+2022-12-10 16:42:19,242|INFO   |      dynamo.py| 98|Node C now treating node D as failed
+2022-12-10 16:42:19,243|INFO   |   framework.py| 42|Enqueue b->A: ClientPut(K1=21@{D:2})
+2022-12-10 16:42:19,243|DEBUG  |       timer.py| 41|Start timer 4374490440 prio 17 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 16:42:19,243|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 3) pending timers
+2022-12-10 16:42:19,243|INFO   |   framework.py|112|Dequeue b->A: ClientPut(K1=21@{D:2})
+2022-12-10 16:42:19,243|INFO   |      dynamo.py|131|put(K1=21) maps to [<dynamo.DynamoNode object at 0x1038f2f88>, <dynamo.DynamoNode object at 0x103442788>, <dynamo.DynamoNode object at 0x1034424c8>]
+2022-12-10 16:42:19,243|INFO   |   framework.py| 83|Enqueue(fwd) A->D: ClientPut(K1=21@{D:2})
+2022-12-10 16:42:19,243|INFO   |   framework.py|109|Drop b->D: ClientPut(K1=21@{D:2}) as route down
+2022-12-10 16:42:19,243|DEBUG  |       timer.py| 67|Pop timer 4374490440 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 16:42:19,243|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node b
+2022-12-10 16:42:19,243|INFO   |      dynamo.py|308|Put request timed out; retrying
+2022-12-10 16:42:19,243|INFO   |   framework.py| 42|Enqueue b->F: ClientPut(K1=21@{D:2})
+2022-12-10 16:42:19,243|DEBUG  |       timer.py| 41|Start timer 4374495816 prio 17 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 16:42:19,243|INFO   |   framework.py|101|Start of schedule: 1 (limit 32766) pending messages, 7 (limit 2) pending timers
+2022-12-10 16:42:19,243|INFO   |   framework.py|109|Drop b->F: ClientPut(K1=21@{D:2}) as route down
+2022-12-10 16:42:19,243|DEBUG  |       timer.py| 67|Pop timer 4374495816 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 16:42:19,243|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node b
+2022-12-10 16:42:19,243|INFO   |      dynamo.py|308|Put request timed out; retrying
+2022-12-10 16:42:19,243|INFO   |   framework.py| 42|Enqueue b->B: ClientPut(K1=21@{D:2})
+2022-12-10 16:42:19,243|DEBUG  |       timer.py| 41|Start timer 4374496328 prio 17 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 16:42:19,243|INFO   |   framework.py|101|Start of schedule: 1 (limit 32765) pending messages, 7 (limit 1) pending timers
+2022-12-10 16:42:19,243|INFO   |   framework.py|112|Dequeue b->B: ClientPut(K1=21@{D:2})
+2022-12-10 16:42:19,243|INFO   |      dynamo.py|138|B, 1: put K1=21
+2022-12-10 16:42:19,243|INFO   |   framework.py| 42|Enqueue B->D: PutReq(K1=21@{B:1, D:2})
+2022-12-10 16:42:19,243|DEBUG  |       timer.py| 41|Start timer 4374495432 prio 20 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 16:42:19,243|INFO   |   framework.py| 42|Enqueue B->B: PutReq(K1=21@{B:1, D:2})
+2022-12-10 16:42:19,243|DEBUG  |       timer.py| 41|Start timer 4374497544 prio 20 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 16:42:19,243|INFO   |   framework.py| 42|Enqueue B->C: PutReq(K1=21@{B:1, D:2})
+2022-12-10 16:42:19,243|DEBUG  |       timer.py| 41|Start timer 4374497864 prio 20 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 16:42:19,243|INFO   |   framework.py|109|Drop B->D: PutReq(K1=21@{B:1, D:2}) as route down
+2022-12-10 16:42:19,243|INFO   |   framework.py|112|Dequeue B->B: PutReq(K1=21@{B:1, D:2})
+2022-12-10 16:42:19,243|INFO   |      dynamo.py|188|B: store K1=21
+2022-12-10 16:42:19,243|INFO   |   framework.py| 42|Enqueue B->B: PutRsp(K1=21@{B:1, D:2})
+2022-12-10 16:42:19,243|INFO   |   framework.py|112|Dequeue B->C: PutReq(K1=21@{B:1, D:2})
+2022-12-10 16:42:19,243|INFO   |      dynamo.py|188|C: store K1=21
+2022-12-10 16:42:19,243|INFO   |   framework.py| 42|Enqueue C->B: PutRsp(K1=21@{B:1, D:2})
+2022-12-10 16:42:19,243|INFO   |   framework.py|112|Dequeue B->B: PutRsp(K1=21@{B:1, D:2})
+2022-12-10 16:42:19,243|DEBUG  |       timer.py| 55|Cancel timer 4374497544 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 16:42:19,243|INFO   |   framework.py|112|Dequeue C->B: PutRsp(K1=21@{B:1, D:2})
+2022-12-10 16:42:19,243|DEBUG  |       timer.py| 55|Cancel timer 4374497864 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 16:42:19,243|INFO   |      dynamo.py|205|B: written 2 copies of K1=21 so done
+2022-12-10 16:42:19,243|DEBUG  |      dynamo.py|206|  copies at ['B', 'C']
+2022-12-10 16:42:19,243|INFO   |   framework.py| 42|Enqueue B->b: ClientPutRsp(K1=21@{B:1, D:2})
+2022-12-10 16:42:19,243|INFO   |   framework.py|112|Dequeue B->b: ClientPutRsp(K1=21@{B:1, D:2})
+2022-12-10 16:42:19,243|DEBUG  |       timer.py| 55|Cancel timer 4374496328 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 16:42:19,244|DEBUG  |       timer.py| 67|Pop timer 4374495432 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 16:42:19,244|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node B
+2022-12-10 16:42:19,244|INFO   |      dynamo.py| 98|Node B now treating node D as failed
+2022-12-10 16:42:19,248|INFO   | test_dynamo.py| 42|Reset after last test
+2022-12-10 17:13:07,856|INFO   |   logconfig.py| 27|Logger initialized, input filtering at level 10 to file pynamo.log
+2022-12-10 17:13:07,868|INFO   | test_dynamo.py| 33|Reset for next test
+2022-12-10 17:13:07,868|DEBUG  |        node.py| 45|Create node A
+2022-12-10 17:13:07,880|DEBUG  |       timer.py| 41|Start timer 4346970376 prio 15 for node A reason retry
+2022-12-10 17:13:07,880|DEBUG  |        node.py| 45|Create node B
+2022-12-10 17:13:07,892|DEBUG  |       timer.py| 41|Start timer 4355228360 prio 15 for node B reason retry
+2022-12-10 17:13:07,892|DEBUG  |        node.py| 45|Create node C
+2022-12-10 17:13:07,904|DEBUG  |       timer.py| 41|Start timer 4360152712 prio 15 for node C reason retry
+2022-12-10 17:13:07,904|DEBUG  |        node.py| 45|Create node D
+2022-12-10 17:13:07,925|DEBUG  |       timer.py| 41|Start timer 4365072968 prio 15 for node D reason retry
+2022-12-10 17:13:07,925|DEBUG  |        node.py| 45|Create node E
+2022-12-10 17:13:07,937|DEBUG  |       timer.py| 41|Start timer 4369997192 prio 15 for node E reason retry
+2022-12-10 17:13:07,937|DEBUG  |        node.py| 45|Create node F
+2022-12-10 17:13:07,949|DEBUG  |       timer.py| 41|Start timer 4374954056 prio 15 for node F reason retry
+2022-12-10 17:13:07,949|DEBUG  |        node.py| 45|Create node a
+2022-12-10 17:13:07,949|INFO   |   framework.py| 42|Enqueue a->D: ClientGet(K1=?)
+2022-12-10 17:13:07,949|DEBUG  |       timer.py| 41|Start timer 4374955656 prio 17 for node a reason ClientGet(K1=?)
+2022-12-10 17:13:07,950|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 0) pending timers
+2022-12-10 17:13:07,950|INFO   |   framework.py|112|Dequeue a->D: ClientGet(K1=?)
+2022-12-10 17:13:07,950|INFO   |   framework.py| 42|Enqueue D->D: GetReq(K1=?)
+2022-12-10 17:13:07,950|DEBUG  |       timer.py| 41|Start timer 4374954952 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:13:07,950|INFO   |   framework.py| 42|Enqueue D->B: GetReq(K1=?)
+2022-12-10 17:13:07,950|DEBUG  |       timer.py| 41|Start timer 4374955400 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:13:07,950|INFO   |   framework.py| 42|Enqueue D->C: GetReq(K1=?)
+2022-12-10 17:13:07,950|DEBUG  |       timer.py| 41|Start timer 4374957256 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:13:07,950|INFO   |   framework.py|112|Dequeue D->D: GetReq(K1=?)
+2022-12-10 17:13:07,950|INFO   |      dynamo.py|220|D: retrieve K1=?
+2022-12-10 17:13:07,950|INFO   |   framework.py| 42|Enqueue D->D: GetRsp(K1=None@None)
+2022-12-10 17:13:07,950|INFO   |   framework.py|112|Dequeue D->B: GetReq(K1=?)
+2022-12-10 17:13:07,950|INFO   |      dynamo.py|220|B: retrieve K1=?
+2022-12-10 17:13:07,950|INFO   |   framework.py| 42|Enqueue B->D: GetRsp(K1=None@None)
+2022-12-10 17:13:07,950|INFO   |   framework.py|112|Dequeue D->C: GetReq(K1=?)
+2022-12-10 17:13:07,950|INFO   |      dynamo.py|220|C: retrieve K1=?
+2022-12-10 17:13:07,950|INFO   |   framework.py| 42|Enqueue C->D: GetRsp(K1=None@None)
+2022-12-10 17:13:07,950|INFO   |   framework.py|112|Dequeue D->D: GetRsp(K1=None@None)
+2022-12-10 17:13:07,950|DEBUG  |       timer.py| 55|Cancel timer 4374954952 for node D reason GetReq(K1=?)
+2022-12-10 17:13:07,950|INFO   |   framework.py|112|Dequeue B->D: GetRsp(K1=None@None)
+2022-12-10 17:13:07,950|DEBUG  |       timer.py| 55|Cancel timer 4374955400 for node D reason GetReq(K1=?)
+2022-12-10 17:13:07,950|INFO   |      dynamo.py|231|D: read 2 copies of K1=? so done
+2022-12-10 17:13:07,950|DEBUG  |      dynamo.py|232|  copies at [('D', None), ('B', None)]
+2022-12-10 17:13:07,950|INFO   |   framework.py| 42|Enqueue D->a: ClientGetRsp(K1=[None]@[{}])
+2022-12-10 17:13:07,950|INFO   |   framework.py|112|Dequeue C->D: GetRsp(K1=None@None)
+2022-12-10 17:13:07,950|DEBUG  |       timer.py| 55|Cancel timer 4374957256 for node D reason GetReq(K1=?)
+2022-12-10 17:13:07,950|INFO   |   framework.py|112|Dequeue D->a: ClientGetRsp(K1=[None]@[{}])
+2022-12-10 17:13:07,950|DEBUG  |       timer.py| 55|Cancel timer 4374955656 for node a reason ClientGet(K1=?)
+2022-12-10 17:13:07,950|INFO   |   framework.py| 42|Enqueue a->D: ClientPut(K1=1@{})
+2022-12-10 17:13:07,950|DEBUG  |       timer.py| 41|Start timer 4374955528 prio 17 for node a reason ClientPut(K1=1@{})
+2022-12-10 17:13:07,950|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 0) pending timers
+2022-12-10 17:13:07,950|INFO   |   framework.py|112|Dequeue a->D: ClientPut(K1=1@{})
+2022-12-10 17:13:07,950|INFO   |      dynamo.py|138|D, 2: put K1=1
+2022-12-10 17:13:07,950|INFO   |   framework.py| 42|Enqueue D->D: PutReq(K1=1@{D:2})
+2022-12-10 17:13:07,950|DEBUG  |       timer.py| 41|Start timer 4374958024 prio 20 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:13:07,950|INFO   |   framework.py| 42|Enqueue D->B: PutReq(K1=1@{D:2})
+2022-12-10 17:13:07,950|DEBUG  |       timer.py| 41|Start timer 4374955272 prio 20 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:13:07,950|INFO   |   framework.py| 42|Enqueue D->C: PutReq(K1=1@{D:2})
+2022-12-10 17:13:07,950|DEBUG  |       timer.py| 41|Start timer 4374955080 prio 20 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:13:07,950|INFO   |   framework.py|112|Dequeue D->D: PutReq(K1=1@{D:2})
+2022-12-10 17:13:07,950|INFO   |      dynamo.py|188|D: store K1=1
+2022-12-10 17:13:07,951|INFO   |   framework.py| 42|Enqueue D->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:13:07,951|INFO   |   framework.py|112|Dequeue D->B: PutReq(K1=1@{D:2})
+2022-12-10 17:13:07,951|INFO   |      dynamo.py|188|B: store K1=1
+2022-12-10 17:13:07,951|INFO   |   framework.py| 42|Enqueue B->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:13:07,951|INFO   |   framework.py|112|Dequeue D->C: PutReq(K1=1@{D:2})
+2022-12-10 17:13:07,951|INFO   |      dynamo.py|188|C: store K1=1
+2022-12-10 17:13:07,951|INFO   |   framework.py| 42|Enqueue C->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:13:07,951|INFO   |   framework.py|112|Dequeue D->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:13:07,951|DEBUG  |       timer.py| 55|Cancel timer 4374958024 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:13:07,951|INFO   |   framework.py|112|Dequeue B->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:13:07,951|DEBUG  |       timer.py| 55|Cancel timer 4374955272 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:13:07,951|INFO   |      dynamo.py|205|D: written 2 copies of K1=1 so done
+2022-12-10 17:13:07,951|DEBUG  |      dynamo.py|206|  copies at ['D', 'B']
+2022-12-10 17:13:07,951|INFO   |   framework.py| 42|Enqueue D->a: ClientPutRsp(K1=1@{D:2})
+2022-12-10 17:13:07,951|INFO   |   framework.py|112|Dequeue C->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:13:07,951|DEBUG  |       timer.py| 55|Cancel timer 4374955080 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:13:07,951|INFO   |   framework.py|112|Dequeue D->a: ClientPutRsp(K1=1@{D:2})
+2022-12-10 17:13:07,951|DEBUG  |       timer.py| 55|Cancel timer 4374955528 for node a reason ClientPut(K1=1@{})
+2022-12-10 17:13:07,951|INFO   |   framework.py| 42|Enqueue a->D: ClientGet(K1=?)
+2022-12-10 17:13:07,951|DEBUG  |       timer.py| 41|Start timer 4374954888 prio 17 for node a reason ClientGet(K1=?)
+2022-12-10 17:13:07,951|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 0) pending timers
+2022-12-10 17:13:07,951|INFO   |   framework.py|112|Dequeue a->D: ClientGet(K1=?)
+2022-12-10 17:13:07,951|INFO   |   framework.py| 42|Enqueue D->D: GetReq(K1=?)
+2022-12-10 17:13:07,951|DEBUG  |       timer.py| 41|Start timer 4374954504 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:13:07,951|INFO   |   framework.py| 42|Enqueue D->B: GetReq(K1=?)
+2022-12-10 17:13:07,951|DEBUG  |       timer.py| 41|Start timer 4379891080 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:13:07,951|INFO   |   framework.py| 42|Enqueue D->C: GetReq(K1=?)
+2022-12-10 17:13:07,951|DEBUG  |       timer.py| 41|Start timer 4379891400 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:13:07,951|INFO   |   framework.py|112|Dequeue D->D: GetReq(K1=?)
+2022-12-10 17:13:07,951|INFO   |      dynamo.py|220|D: retrieve K1=?
+2022-12-10 17:13:07,951|INFO   |   framework.py| 42|Enqueue D->D: GetRsp(K1=1@{D:2})
+2022-12-10 17:13:07,951|INFO   |   framework.py|112|Dequeue D->B: GetReq(K1=?)
+2022-12-10 17:13:07,951|INFO   |      dynamo.py|220|B: retrieve K1=?
+2022-12-10 17:13:07,951|INFO   |   framework.py| 42|Enqueue B->D: GetRsp(K1=1@{D:2})
+2022-12-10 17:13:07,951|INFO   |   framework.py|112|Dequeue D->C: GetReq(K1=?)
+2022-12-10 17:13:07,951|INFO   |      dynamo.py|220|C: retrieve K1=?
+2022-12-10 17:13:07,951|INFO   |   framework.py| 42|Enqueue C->D: GetRsp(K1=1@{D:2})
+2022-12-10 17:13:07,951|INFO   |   framework.py|112|Dequeue D->D: GetRsp(K1=1@{D:2})
+2022-12-10 17:13:07,951|DEBUG  |       timer.py| 55|Cancel timer 4374954504 for node D reason GetReq(K1=?)
+2022-12-10 17:13:07,951|INFO   |   framework.py|112|Dequeue B->D: GetRsp(K1=1@{D:2})
+2022-12-10 17:13:07,951|DEBUG  |       timer.py| 55|Cancel timer 4379891080 for node D reason GetReq(K1=?)
+2022-12-10 17:13:07,951|INFO   |      dynamo.py|231|D: read 2 copies of K1=? so done
+2022-12-10 17:13:07,951|DEBUG  |      dynamo.py|232|  copies at [('B', 1), ('D', 1)]
+2022-12-10 17:13:07,951|INFO   |   framework.py| 42|Enqueue D->a: ClientGetRsp(K1=[1]@[{D:2}])
+2022-12-10 17:13:07,951|INFO   |   framework.py|112|Dequeue C->D: GetRsp(K1=1@{D:2})
+2022-12-10 17:13:07,952|DEBUG  |       timer.py| 55|Cancel timer 4379891400 for node D reason GetReq(K1=?)
+2022-12-10 17:13:07,952|INFO   |   framework.py|112|Dequeue D->a: ClientGetRsp(K1=[1]@[{D:2}])
+2022-12-10 17:13:07,952|DEBUG  |       timer.py| 55|Cancel timer 4374954888 for node a reason ClientGet(K1=?)
+2022-12-10 17:13:07,952|INFO   |   framework.py| 42|Enqueue a->D: ClientPut(K1=2@{D:2})
+2022-12-10 17:13:07,952|DEBUG  |       timer.py| 41|Start timer 4379892296 prio 17 for node a reason ClientPut(K1=2@{D:2})
+2022-12-10 17:13:07,952|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 0) pending timers
+2022-12-10 17:13:07,952|INFO   |   framework.py|112|Dequeue a->D: ClientPut(K1=2@{D:2})
+2022-12-10 17:13:07,952|INFO   |      dynamo.py|138|D, 4: put K1=2
+2022-12-10 17:13:07,952|INFO   |   framework.py| 42|Enqueue D->D: PutReq(K1=2@{D:4})
+2022-12-10 17:13:07,952|DEBUG  |       timer.py| 41|Start timer 4379893192 prio 20 for node D reason PutReq(K1=2@{D:4})
+2022-12-10 17:13:07,952|INFO   |   framework.py| 42|Enqueue D->B: PutReq(K1=2@{D:4})
+2022-12-10 17:13:07,952|DEBUG  |       timer.py| 41|Start timer 4379892872 prio 20 for node D reason PutReq(K1=2@{D:4})
+2022-12-10 17:13:07,952|INFO   |   framework.py| 42|Enqueue D->C: PutReq(K1=2@{D:4})
+2022-12-10 17:13:07,952|DEBUG  |       timer.py| 41|Start timer 4379893640 prio 20 for node D reason PutReq(K1=2@{D:4})
+2022-12-10 17:13:07,952|INFO   |   framework.py|112|Dequeue D->D: PutReq(K1=2@{D:4})
+2022-12-10 17:13:07,952|INFO   |      dynamo.py|188|D: store K1=2
+2022-12-10 17:13:07,952|INFO   |   framework.py| 42|Enqueue D->D: PutRsp(K1=2@{D:4})
+2022-12-10 17:13:07,952|INFO   |   framework.py|112|Dequeue D->B: PutReq(K1=2@{D:4})
+2022-12-10 17:13:07,952|INFO   |      dynamo.py|188|B: store K1=2
+2022-12-10 17:13:07,952|INFO   |   framework.py| 42|Enqueue B->D: PutRsp(K1=2@{D:4})
+2022-12-10 17:13:07,952|INFO   |   framework.py|112|Dequeue D->C: PutReq(K1=2@{D:4})
+2022-12-10 17:13:07,952|INFO   |      dynamo.py|188|C: store K1=2
+2022-12-10 17:13:07,952|INFO   |   framework.py| 42|Enqueue C->D: PutRsp(K1=2@{D:4})
+2022-12-10 17:13:07,952|INFO   |   framework.py|112|Dequeue D->D: PutRsp(K1=2@{D:4})
+2022-12-10 17:13:07,952|DEBUG  |       timer.py| 55|Cancel timer 4379893192 for node D reason PutReq(K1=2@{D:4})
+2022-12-10 17:13:07,952|INFO   |   framework.py|112|Dequeue B->D: PutRsp(K1=2@{D:4})
+2022-12-10 17:13:07,952|DEBUG  |       timer.py| 55|Cancel timer 4379892872 for node D reason PutReq(K1=2@{D:4})
+2022-12-10 17:13:07,952|INFO   |      dynamo.py|205|D: written 2 copies of K1=2 so done
+2022-12-10 17:13:07,952|DEBUG  |      dynamo.py|206|  copies at ['D', 'B']
+2022-12-10 17:13:07,952|INFO   |   framework.py| 42|Enqueue D->a: ClientPutRsp(K1=2@{D:4})
+2022-12-10 17:13:07,952|INFO   |   framework.py|112|Dequeue C->D: PutRsp(K1=2@{D:4})
+2022-12-10 17:13:07,952|DEBUG  |       timer.py| 55|Cancel timer 4379893640 for node D reason PutReq(K1=2@{D:4})
+2022-12-10 17:13:07,952|INFO   |   framework.py|112|Dequeue D->a: ClientPutRsp(K1=2@{D:4})
+2022-12-10 17:13:07,952|DEBUG  |       timer.py| 55|Cancel timer 4379892296 for node a reason ClientPut(K1=2@{D:2})
+2022-12-10 17:13:07,955|INFO   | test_dynamo.py| 42|Reset after last test
+2022-12-10 17:16:23,933|INFO   |   logconfig.py| 27|Logger initialized, input filtering at level 10 to file pynamo.log
+2022-12-10 17:16:39,995|INFO   |   logconfig.py| 27|Logger initialized, input filtering at level 10 to file pynamo.log
+2022-12-10 17:16:39,998|INFO   | test_dynamo.py| 33|Reset for next test
+2022-12-10 17:16:39,998|DEBUG  |        node.py| 45|Create node A
+2022-12-10 17:16:39,998|DEBUG  |        node.py| 45|Create node B
+2022-12-10 17:16:39,998|DEBUG  |        node.py| 45|Create node C
+2022-12-10 17:16:39,998|DEBUG  |        node.py| 45|Create node D
+2022-12-10 17:16:39,999|DEBUG  |        node.py| 45|Create node E
+2022-12-10 17:16:39,999|DEBUG  |        node.py| 45|Create node F
+2022-12-10 17:16:39,999|DEBUG  |        node.py| 45|Create node a
+2022-12-10 17:16:39,999|INFO   |   framework.py| 42|Enqueue a->A: ClientPut(K1=1)
+2022-12-10 17:16:39,999|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 0 (limit 32768) pending timers
+2022-12-10 17:16:39,999|INFO   |   framework.py|112|Dequeue a->A: ClientPut(K1=1)
+2022-12-10 17:16:39,999|INFO   |     dynamo1.py| 60|put(K1=1) maps to [<dynamo1.DynamoNode object at 0x1055c7688>, <dynamo1.DynamoNode object at 0x1055bcdc8>, <dynamo1.DynamoNode object at 0x1051beb88>]
+2022-12-10 17:16:39,999|INFO   |   framework.py| 83|Enqueue(fwd) A->D: ClientPut(K1=1)
+2022-12-10 17:16:39,999|INFO   |   framework.py|112|Dequeue a->D: ClientPut(K1=1)
+2022-12-10 17:16:39,999|INFO   |     dynamo1.py| 67|D, 1: put K1=1
+2022-12-10 17:16:39,999|INFO   |   framework.py| 42|Enqueue D->D: PutReq(K1=1)
+2022-12-10 17:16:39,999|INFO   |   framework.py| 42|Enqueue D->B: PutReq(K1=1)
+2022-12-10 17:16:39,999|INFO   |   framework.py| 42|Enqueue D->C: PutReq(K1=1)
+2022-12-10 17:16:39,999|INFO   |   framework.py|112|Dequeue D->D: PutReq(K1=1)
+2022-12-10 17:16:39,999|INFO   |     dynamo1.py|106|D: store K1=1
+2022-12-10 17:16:39,999|INFO   |   framework.py| 42|Enqueue D->D: PutRsp(K1=1)
+2022-12-10 17:16:39,999|INFO   |   framework.py|112|Dequeue D->B: PutReq(K1=1)
+2022-12-10 17:16:39,999|INFO   |     dynamo1.py|106|B: store K1=1
+2022-12-10 17:16:39,999|INFO   |   framework.py| 42|Enqueue B->D: PutRsp(K1=1)
+2022-12-10 17:16:39,999|INFO   |   framework.py|112|Dequeue D->C: PutReq(K1=1)
+2022-12-10 17:16:39,999|INFO   |     dynamo1.py|106|C: store K1=1
+2022-12-10 17:16:39,999|INFO   |   framework.py| 42|Enqueue C->D: PutRsp(K1=1)
+2022-12-10 17:16:39,999|INFO   |   framework.py|112|Dequeue D->D: PutRsp(K1=1)
+2022-12-10 17:16:39,999|INFO   |   framework.py|112|Dequeue B->D: PutRsp(K1=1)
+2022-12-10 17:16:39,999|INFO   |     dynamo1.py|117|D: written 2 copies of K1=1 so done
+2022-12-10 17:16:39,999|DEBUG  |     dynamo1.py|118|  copies at ['D', 'B']
+2022-12-10 17:16:39,999|INFO   |   framework.py| 42|Enqueue D->a: ClientPutRsp(K1=1)
+2022-12-10 17:16:39,999|INFO   |   framework.py|112|Dequeue C->D: PutRsp(K1=1)
+2022-12-10 17:16:39,999|INFO   |   framework.py|112|Dequeue D->a: ClientPutRsp(K1=1)
+2022-12-10 17:16:40,000|INFO   | test_dynamo.py| 42|Reset after last test
+2022-12-10 17:16:47,352|INFO   |   logconfig.py| 26|Logger initialized, input filtering at level 10 to file pynamo.log
+2022-12-10 17:20:20,987|INFO   |   logconfig.py| 27|Logger initialized, input filtering at level 10 to file pynamo.log
+2022-12-10 17:20:20,990|INFO   | test_dynamo.py| 33|Reset for next test
+2022-12-10 17:20:20,990|DEBUG  |        node.py| 45|Create node A
+2022-12-10 17:20:21,002|DEBUG  |       timer.py| 41|Start timer 4370629384 prio 15 for node A reason retry
+2022-12-10 17:20:21,002|DEBUG  |        node.py| 45|Create node B
+2022-12-10 17:20:21,014|DEBUG  |       timer.py| 41|Start timer 4377993544 prio 15 for node B reason retry
+2022-12-10 17:20:21,014|DEBUG  |        node.py| 45|Create node C
+2022-12-10 17:20:21,026|DEBUG  |       timer.py| 41|Start timer 4382911368 prio 15 for node C reason retry
+2022-12-10 17:20:21,026|DEBUG  |        node.py| 45|Create node D
+2022-12-10 17:20:21,048|DEBUG  |       timer.py| 41|Start timer 4387846152 prio 15 for node D reason retry
+2022-12-10 17:20:21,048|DEBUG  |        node.py| 45|Create node E
+2022-12-10 17:20:21,060|DEBUG  |       timer.py| 41|Start timer 4392792264 prio 15 for node E reason retry
+2022-12-10 17:20:21,060|DEBUG  |        node.py| 45|Create node F
+2022-12-10 17:20:21,073|DEBUG  |       timer.py| 41|Start timer 4397724360 prio 15 for node F reason retry
+2022-12-10 17:20:21,073|DEBUG  |        node.py| 45|Create node a
+2022-12-10 17:20:21,073|DEBUG  |        node.py| 45|Create node b
+2022-12-10 17:20:21,073|INFO   |   framework.py| 42|Enqueue a->D: ClientGet(K1=?)
+2022-12-10 17:20:21,073|DEBUG  |       timer.py| 41|Start timer 4397725768 prio 17 for node a reason ClientGet(K1=?)
+2022-12-10 17:20:21,073|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 0) pending timers
+2022-12-10 17:20:21,073|INFO   |   framework.py|112|Dequeue a->D: ClientGet(K1=?)
+2022-12-10 17:20:21,073|INFO   |   framework.py| 42|Enqueue D->D: GetReq(K1=?)
+2022-12-10 17:20:21,073|DEBUG  |       timer.py| 41|Start timer 4397727688 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:20:21,073|INFO   |   framework.py| 42|Enqueue D->B: GetReq(K1=?)
+2022-12-10 17:20:21,073|DEBUG  |       timer.py| 41|Start timer 4397726408 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:20:21,073|INFO   |   framework.py| 42|Enqueue D->C: GetReq(K1=?)
+2022-12-10 17:20:21,073|DEBUG  |       timer.py| 41|Start timer 4397725256 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:20:21,073|INFO   |   framework.py|112|Dequeue D->D: GetReq(K1=?)
+2022-12-10 17:20:21,073|INFO   |      dynamo.py|220|D: retrieve K1=?
+2022-12-10 17:20:21,073|INFO   |   framework.py| 42|Enqueue D->D: GetRsp(K1=None@None)
+2022-12-10 17:20:21,073|INFO   |   framework.py|112|Dequeue D->B: GetReq(K1=?)
+2022-12-10 17:20:21,073|INFO   |      dynamo.py|220|B: retrieve K1=?
+2022-12-10 17:20:21,073|INFO   |   framework.py| 42|Enqueue B->D: GetRsp(K1=None@None)
+2022-12-10 17:20:21,073|INFO   |   framework.py|112|Dequeue D->C: GetReq(K1=?)
+2022-12-10 17:20:21,073|INFO   |      dynamo.py|220|C: retrieve K1=?
+2022-12-10 17:20:21,073|INFO   |   framework.py| 42|Enqueue C->D: GetRsp(K1=None@None)
+2022-12-10 17:20:21,073|INFO   |   framework.py|112|Dequeue D->D: GetRsp(K1=None@None)
+2022-12-10 17:20:21,073|DEBUG  |       timer.py| 55|Cancel timer 4397727688 for node D reason GetReq(K1=?)
+2022-12-10 17:20:21,073|INFO   |   framework.py|112|Dequeue B->D: GetRsp(K1=None@None)
+2022-12-10 17:20:21,074|DEBUG  |       timer.py| 55|Cancel timer 4397726408 for node D reason GetReq(K1=?)
+2022-12-10 17:20:21,074|INFO   |      dynamo.py|231|D: read 2 copies of K1=? so done
+2022-12-10 17:20:21,074|DEBUG  |      dynamo.py|232|  copies at [('B', None), ('D', None)]
+2022-12-10 17:20:21,074|INFO   |   framework.py| 42|Enqueue D->a: ClientGetRsp(K1=[None]@[{}])
+2022-12-10 17:20:21,074|INFO   |   framework.py|112|Dequeue C->D: GetRsp(K1=None@None)
+2022-12-10 17:20:21,074|DEBUG  |       timer.py| 55|Cancel timer 4397725256 for node D reason GetReq(K1=?)
+2022-12-10 17:20:21,074|INFO   |   framework.py|112|Dequeue D->a: ClientGetRsp(K1=[None]@[{}])
+2022-12-10 17:20:21,074|DEBUG  |       timer.py| 55|Cancel timer 4397725768 for node a reason ClientGet(K1=?)
+2022-12-10 17:20:21,074|INFO   |   framework.py| 42|Enqueue a->D: ClientPut(K1=1@{})
+2022-12-10 17:20:21,074|DEBUG  |       timer.py| 41|Start timer 4397725128 prio 17 for node a reason ClientPut(K1=1@{})
+2022-12-10 17:20:21,074|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 0) pending timers
+2022-12-10 17:20:21,074|INFO   |   framework.py|112|Dequeue a->D: ClientPut(K1=1@{})
+2022-12-10 17:20:21,074|INFO   |      dynamo.py|138|D, 2: put K1=1
+2022-12-10 17:20:21,074|INFO   |   framework.py| 42|Enqueue D->D: PutReq(K1=1@{D:2})
+2022-12-10 17:20:21,074|DEBUG  |       timer.py| 41|Start timer 4397726280 prio 20 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:21,074|INFO   |   framework.py| 42|Enqueue D->B: PutReq(K1=1@{D:2})
+2022-12-10 17:20:21,074|DEBUG  |       timer.py| 41|Start timer 4397724872 prio 20 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:21,074|INFO   |   framework.py| 42|Enqueue D->C: PutReq(K1=1@{D:2})
+2022-12-10 17:20:21,074|DEBUG  |       timer.py| 41|Start timer 4397726664 prio 20 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:21,074|INFO   |   framework.py|112|Dequeue D->D: PutReq(K1=1@{D:2})
+2022-12-10 17:20:21,074|INFO   |      dynamo.py|188|D: store K1=1
+2022-12-10 17:20:21,074|INFO   |   framework.py| 42|Enqueue D->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:21,074|INFO   |   framework.py|112|Dequeue D->B: PutReq(K1=1@{D:2})
+2022-12-10 17:20:21,074|INFO   |      dynamo.py|188|B: store K1=1
+2022-12-10 17:20:21,074|INFO   |   framework.py| 42|Enqueue B->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:21,074|INFO   |   framework.py|112|Dequeue D->C: PutReq(K1=1@{D:2})
+2022-12-10 17:20:21,074|INFO   |      dynamo.py|188|C: store K1=1
+2022-12-10 17:20:21,074|INFO   |   framework.py| 42|Enqueue C->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:21,074|INFO   |   framework.py|112|Dequeue D->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:21,074|DEBUG  |       timer.py| 55|Cancel timer 4397726280 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:21,074|INFO   |   framework.py|112|Dequeue B->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:21,074|DEBUG  |       timer.py| 55|Cancel timer 4397724872 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:21,074|INFO   |      dynamo.py|205|D: written 2 copies of K1=1 so done
+2022-12-10 17:20:21,074|DEBUG  |      dynamo.py|206|  copies at ['D', 'B']
+2022-12-10 17:20:21,074|INFO   |   framework.py| 42|Enqueue D->a: ClientPutRsp(K1=1@{D:2})
+2022-12-10 17:20:21,075|INFO   |   framework.py|112|Dequeue C->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:21,075|DEBUG  |       timer.py| 55|Cancel timer 4397726664 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:21,075|INFO   |   framework.py|112|Dequeue D->a: ClientPutRsp(K1=1@{D:2})
+2022-12-10 17:20:21,075|DEBUG  |       timer.py| 55|Cancel timer 4397725128 for node a reason ClientPut(K1=1@{})
+2022-12-10 17:20:21,075|INFO   |   framework.py| 42|Enqueue a->D: ClientPut(K1=11@{D:2})
+2022-12-10 17:20:21,075|DEBUG  |       timer.py| 41|Start timer 4397733256 prio 17 for node a reason ClientPut(K1=11@{D:2})
+2022-12-10 17:20:21,075|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 2) pending timers
+2022-12-10 17:20:21,075|INFO   |   framework.py|112|Dequeue a->D: ClientPut(K1=11@{D:2})
+2022-12-10 17:20:21,075|INFO   |      dynamo.py|138|D, 3: put K1=11
+2022-12-10 17:20:21,075|INFO   |   framework.py| 42|Enqueue D->D: PutReq(K1=11@{D:3})
+2022-12-10 17:20:21,075|DEBUG  |       timer.py| 41|Start timer 4402665608 prio 20 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 17:20:21,075|INFO   |   framework.py| 42|Enqueue D->B: PutReq(K1=11@{D:3})
+2022-12-10 17:20:21,075|DEBUG  |       timer.py| 41|Start timer 4402666440 prio 20 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 17:20:21,075|INFO   |   framework.py| 42|Enqueue D->C: PutReq(K1=11@{D:3})
+2022-12-10 17:20:21,075|DEBUG  |       timer.py| 41|Start timer 4402666760 prio 20 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 17:20:21,075|INFO   |   framework.py|112|Dequeue D->D: PutReq(K1=11@{D:3})
+2022-12-10 17:20:21,075|INFO   |      dynamo.py|188|D: store K1=11
+2022-12-10 17:20:21,075|INFO   |   framework.py| 42|Enqueue D->D: PutRsp(K1=11@{D:3})
+2022-12-10 17:20:21,075|INFO   |   framework.py|109|Drop D->B: PutReq(K1=11@{D:3}) as route down
+2022-12-10 17:20:21,075|INFO   |   framework.py|109|Drop D->C: PutReq(K1=11@{D:3}) as route down
+2022-12-10 17:20:21,075|INFO   |   framework.py|112|Dequeue D->D: PutRsp(K1=11@{D:3})
+2022-12-10 17:20:21,075|DEBUG  |       timer.py| 55|Cancel timer 4402665608 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 17:20:21,075|DEBUG  |       timer.py| 67|Pop timer 4402666440 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 17:20:21,075|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node D
+2022-12-10 17:20:21,075|INFO   |      dynamo.py| 98|Node D now treating node B as failed
+2022-12-10 17:20:21,075|INFO   |   framework.py| 42|Enqueue D->F: PutReq(K1=11@{D:3})
+2022-12-10 17:20:21,075|DEBUG  |       timer.py| 41|Start timer 4402667336 prio 20 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 17:20:21,075|INFO   |   framework.py|101|Start of schedule: 1 (limit 32763) pending messages, 9 (limit 1) pending timers
+2022-12-10 17:20:21,075|INFO   |   framework.py|112|Dequeue D->F: PutReq(K1=11@{D:3})
+2022-12-10 17:20:21,075|INFO   |      dynamo.py|188|F: store K1=11
+2022-12-10 17:20:21,075|INFO   |   framework.py| 42|Enqueue F->D: PutRsp(K1=11@{D:3})
+2022-12-10 17:20:21,075|INFO   |   framework.py|112|Dequeue F->D: PutRsp(K1=11@{D:3})
+2022-12-10 17:20:21,075|DEBUG  |       timer.py| 55|Cancel timer 4402667336 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 17:20:21,075|INFO   |      dynamo.py|205|D: written 2 copies of K1=11 so done
+2022-12-10 17:20:21,075|DEBUG  |      dynamo.py|206|  copies at ['D', 'F']
+2022-12-10 17:20:21,075|INFO   |   framework.py| 42|Enqueue D->a: ClientPutRsp(K1=11@{D:3})
+2022-12-10 17:20:21,075|INFO   |   framework.py|112|Dequeue D->a: ClientPutRsp(K1=11@{D:3})
+2022-12-10 17:20:21,075|DEBUG  |       timer.py| 55|Cancel timer 4397733256 for node a reason ClientPut(K1=11@{D:2})
+2022-12-10 17:20:21,076|DEBUG  |       timer.py| 67|Pop timer 4402666760 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 17:20:21,076|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node D
+2022-12-10 17:20:21,076|INFO   |      dynamo.py| 98|Node D now treating node C as failed
+2022-12-10 17:20:21,076|INFO   |   framework.py| 42|Enqueue b->D: ClientGet(K1=?)
+2022-12-10 17:20:21,076|DEBUG  |       timer.py| 41|Start timer 4402665224 prio 17 for node b reason ClientGet(K1=?)
+2022-12-10 17:20:21,076|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 1) pending timers
+2022-12-10 17:20:21,076|INFO   |   framework.py|109|Drop b->D: ClientGet(K1=?) as route down
+2022-12-10 17:20:21,076|DEBUG  |       timer.py| 67|Pop timer 4402665224 for node b reason ClientGet(K1=?)
+2022-12-10 17:20:21,076|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node b
+2022-12-10 17:20:21,076|INFO   |      dynamo.py|311|Get request timed out; retrying
+2022-12-10 17:20:21,076|INFO   |   framework.py| 42|Enqueue b->A: ClientGet(K1=?)
+2022-12-10 17:20:21,076|DEBUG  |       timer.py| 41|Start timer 4402717896 prio 17 for node b reason ClientGet(K1=?)
+2022-12-10 17:20:21,076|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 1) pending timers
+2022-12-10 17:20:21,076|INFO   |   framework.py|112|Dequeue b->A: ClientGet(K1=?)
+2022-12-10 17:20:21,076|INFO   |      dynamo.py|168|get(K1=?) maps to [<dynamo.DynamoNode object at 0x1053def88>, <dynamo.DynamoNode object at 0x104f2e788>, <dynamo.DynamoNode object at 0x104f2e4c8>]
+2022-12-10 17:20:21,076|INFO   |   framework.py| 83|Enqueue(fwd) A->D: ClientGet(K1=?)
+2022-12-10 17:20:21,076|INFO   |   framework.py|109|Drop b->D: ClientGet(K1=?) as route down
+2022-12-10 17:20:21,076|DEBUG  |       timer.py| 67|Pop timer 4402717896 for node b reason ClientGet(K1=?)
+2022-12-10 17:20:21,076|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node b
+2022-12-10 17:20:21,076|INFO   |      dynamo.py|311|Get request timed out; retrying
+2022-12-10 17:20:21,076|INFO   |   framework.py| 42|Enqueue b->C: ClientGet(K1=?)
+2022-12-10 17:20:21,076|DEBUG  |       timer.py| 41|Start timer 4402718344 prio 17 for node b reason ClientGet(K1=?)
+2022-12-10 17:20:21,076|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 1) pending timers
+2022-12-10 17:20:21,076|INFO   |   framework.py|112|Dequeue b->C: ClientGet(K1=?)
+2022-12-10 17:20:21,076|INFO   |   framework.py| 42|Enqueue C->D: GetReq(K1=?)
+2022-12-10 17:20:21,076|DEBUG  |       timer.py| 41|Start timer 4402718856 prio 20 for node C reason GetReq(K1=?)
+2022-12-10 17:20:21,076|INFO   |   framework.py| 42|Enqueue C->B: GetReq(K1=?)
+2022-12-10 17:20:21,076|DEBUG  |       timer.py| 41|Start timer 4402719176 prio 20 for node C reason GetReq(K1=?)
+2022-12-10 17:20:21,076|INFO   |   framework.py| 42|Enqueue C->C: GetReq(K1=?)
+2022-12-10 17:20:21,076|DEBUG  |       timer.py| 41|Start timer 4402719496 prio 20 for node C reason GetReq(K1=?)
+2022-12-10 17:20:21,076|INFO   |   framework.py|109|Drop C->D: GetReq(K1=?) as route down
+2022-12-10 17:20:21,076|INFO   |   framework.py|112|Dequeue C->B: GetReq(K1=?)
+2022-12-10 17:20:21,076|INFO   |      dynamo.py|220|B: retrieve K1=?
+2022-12-10 17:20:21,076|INFO   |   framework.py| 42|Enqueue B->C: GetRsp(K1=1@{D:2})
+2022-12-10 17:20:21,076|INFO   |   framework.py|112|Dequeue C->C: GetReq(K1=?)
+2022-12-10 17:20:21,076|INFO   |      dynamo.py|220|C: retrieve K1=?
+2022-12-10 17:20:21,076|INFO   |   framework.py| 42|Enqueue C->C: GetRsp(K1=1@{D:2})
+2022-12-10 17:20:21,076|INFO   |   framework.py|112|Dequeue B->C: GetRsp(K1=1@{D:2})
+2022-12-10 17:20:21,076|DEBUG  |       timer.py| 55|Cancel timer 4402719176 for node C reason GetReq(K1=?)
+2022-12-10 17:20:21,076|INFO   |   framework.py|112|Dequeue C->C: GetRsp(K1=1@{D:2})
+2022-12-10 17:20:21,076|DEBUG  |       timer.py| 55|Cancel timer 4402719496 for node C reason GetReq(K1=?)
+2022-12-10 17:20:21,077|INFO   |      dynamo.py|231|C: read 2 copies of K1=? so done
+2022-12-10 17:20:21,077|DEBUG  |      dynamo.py|232|  copies at [('C', 1), ('B', 1)]
+2022-12-10 17:20:21,077|INFO   |   framework.py| 42|Enqueue C->b: ClientGetRsp(K1=[1]@[{D:2}])
+2022-12-10 17:20:21,077|INFO   |   framework.py|112|Dequeue C->b: ClientGetRsp(K1=[1]@[{D:2}])
+2022-12-10 17:20:21,077|DEBUG  |       timer.py| 55|Cancel timer 4402718344 for node b reason ClientGet(K1=?)
+2022-12-10 17:20:21,077|DEBUG  |       timer.py| 67|Pop timer 4402718856 for node C reason GetReq(K1=?)
+2022-12-10 17:20:21,077|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node C
+2022-12-10 17:20:21,077|INFO   |      dynamo.py| 98|Node C now treating node D as failed
+2022-12-10 17:20:21,077|INFO   |   framework.py| 42|Enqueue b->A: ClientPut(K1=21@{D:2})
+2022-12-10 17:20:21,077|DEBUG  |       timer.py| 41|Start timer 4402720072 prio 17 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 17:20:21,077|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 3) pending timers
+2022-12-10 17:20:21,077|INFO   |   framework.py|112|Dequeue b->A: ClientPut(K1=21@{D:2})
+2022-12-10 17:20:21,077|INFO   |      dynamo.py|131|put(K1=21) maps to [<dynamo.DynamoNode object at 0x1053def88>, <dynamo.DynamoNode object at 0x104f2e788>, <dynamo.DynamoNode object at 0x104f2e4c8>]
+2022-12-10 17:20:21,077|INFO   |   framework.py| 83|Enqueue(fwd) A->D: ClientPut(K1=21@{D:2})
+2022-12-10 17:20:21,077|INFO   |   framework.py|109|Drop b->D: ClientPut(K1=21@{D:2}) as route down
+2022-12-10 17:20:21,077|DEBUG  |       timer.py| 67|Pop timer 4402720072 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 17:20:21,077|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node b
+2022-12-10 17:20:21,077|INFO   |      dynamo.py|308|Put request timed out; retrying
+2022-12-10 17:20:21,077|INFO   |   framework.py| 42|Enqueue b->F: ClientPut(K1=21@{D:2})
+2022-12-10 17:20:21,077|DEBUG  |       timer.py| 41|Start timer 4402725448 prio 17 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 17:20:21,077|INFO   |   framework.py|101|Start of schedule: 1 (limit 32766) pending messages, 7 (limit 2) pending timers
+2022-12-10 17:20:21,077|INFO   |   framework.py|109|Drop b->F: ClientPut(K1=21@{D:2}) as route down
+2022-12-10 17:20:21,077|DEBUG  |       timer.py| 67|Pop timer 4402725448 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 17:20:21,077|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node b
+2022-12-10 17:20:21,077|INFO   |      dynamo.py|308|Put request timed out; retrying
+2022-12-10 17:20:21,077|INFO   |   framework.py| 42|Enqueue b->B: ClientPut(K1=21@{D:2})
+2022-12-10 17:20:21,077|DEBUG  |       timer.py| 41|Start timer 4402725960 prio 17 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 17:20:21,077|INFO   |   framework.py|101|Start of schedule: 1 (limit 32765) pending messages, 7 (limit 1) pending timers
+2022-12-10 17:20:21,077|INFO   |   framework.py|112|Dequeue b->B: ClientPut(K1=21@{D:2})
+2022-12-10 17:20:21,077|INFO   |      dynamo.py|138|B, 1: put K1=21
+2022-12-10 17:20:21,077|INFO   |   framework.py| 42|Enqueue B->D: PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:21,077|DEBUG  |       timer.py| 41|Start timer 4402725064 prio 20 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:21,077|INFO   |   framework.py| 42|Enqueue B->B: PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:21,077|DEBUG  |       timer.py| 41|Start timer 4402727176 prio 20 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:21,077|INFO   |   framework.py| 42|Enqueue B->C: PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:21,077|DEBUG  |       timer.py| 41|Start timer 4402727496 prio 20 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:21,077|INFO   |   framework.py|109|Drop B->D: PutReq(K1=21@{B:1, D:2}) as route down
+2022-12-10 17:20:21,077|INFO   |   framework.py|112|Dequeue B->B: PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:21,077|INFO   |      dynamo.py|188|B: store K1=21
+2022-12-10 17:20:21,077|INFO   |   framework.py| 42|Enqueue B->B: PutRsp(K1=21@{B:1, D:2})
+2022-12-10 17:20:21,077|INFO   |   framework.py|112|Dequeue B->C: PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:21,077|INFO   |      dynamo.py|188|C: store K1=21
+2022-12-10 17:20:21,077|INFO   |   framework.py| 42|Enqueue C->B: PutRsp(K1=21@{B:1, D:2})
+2022-12-10 17:20:21,078|INFO   |   framework.py|112|Dequeue B->B: PutRsp(K1=21@{B:1, D:2})
+2022-12-10 17:20:21,078|DEBUG  |       timer.py| 55|Cancel timer 4402727176 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:21,078|INFO   |   framework.py|112|Dequeue C->B: PutRsp(K1=21@{B:1, D:2})
+2022-12-10 17:20:21,078|DEBUG  |       timer.py| 55|Cancel timer 4402727496 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:21,078|INFO   |      dynamo.py|205|B: written 2 copies of K1=21 so done
+2022-12-10 17:20:21,078|DEBUG  |      dynamo.py|206|  copies at ['B', 'C']
+2022-12-10 17:20:21,078|INFO   |   framework.py| 42|Enqueue B->b: ClientPutRsp(K1=21@{B:1, D:2})
+2022-12-10 17:20:21,078|INFO   |   framework.py|112|Dequeue B->b: ClientPutRsp(K1=21@{B:1, D:2})
+2022-12-10 17:20:21,078|DEBUG  |       timer.py| 55|Cancel timer 4402725960 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 17:20:21,078|DEBUG  |       timer.py| 67|Pop timer 4402725064 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:21,078|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node B
+2022-12-10 17:20:21,078|INFO   |      dynamo.py| 98|Node B now treating node D as failed
+2022-12-10 17:20:21,083|INFO   | test_dynamo.py| 42|Reset after last test
+2022-12-10 17:20:34,842|INFO   |   logconfig.py| 27|Logger initialized, input filtering at level 10 to file pynamo.log
+2022-12-10 17:20:34,843|INFO   | test_dynamo.py| 33|Reset for next test
+2022-12-10 17:20:34,843|DEBUG  |        node.py| 45|Create node A
+2022-12-10 17:20:34,844|DEBUG  |        node.py| 45|Create node B
+2022-12-10 17:20:34,844|DEBUG  |        node.py| 45|Create node C
+2022-12-10 17:20:34,844|DEBUG  |        node.py| 45|Create node D
+2022-12-10 17:20:34,844|DEBUG  |        node.py| 45|Create node E
+2022-12-10 17:20:34,844|DEBUG  |        node.py| 45|Create node F
+2022-12-10 17:20:34,844|DEBUG  |        node.py| 45|Create node a
+2022-12-10 17:20:34,844|INFO   |   framework.py| 42|Enqueue a->A: ClientPut(K1=1)
+2022-12-10 17:20:34,844|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 0 (limit 32768) pending timers
+2022-12-10 17:20:34,844|INFO   |   framework.py|112|Dequeue a->A: ClientPut(K1=1)
+2022-12-10 17:20:34,844|INFO   |     dynamo1.py| 60|put(K1=1) maps to [<dynamo1.DynamoNode object at 0x10145e488>, <dynamo1.DynamoNode object at 0x101454bc8>, <dynamo1.DynamoNode object at 0x10101bd48>]
+2022-12-10 17:20:34,844|INFO   |   framework.py| 83|Enqueue(fwd) A->D: ClientPut(K1=1)
+2022-12-10 17:20:34,844|INFO   |   framework.py|112|Dequeue a->D: ClientPut(K1=1)
+2022-12-10 17:20:34,844|INFO   |     dynamo1.py| 67|D, 1: put K1=1
+2022-12-10 17:20:34,844|INFO   |   framework.py| 42|Enqueue D->D: PutReq(K1=1)
+2022-12-10 17:20:34,844|INFO   |   framework.py| 42|Enqueue D->B: PutReq(K1=1)
+2022-12-10 17:20:34,844|INFO   |   framework.py| 42|Enqueue D->C: PutReq(K1=1)
+2022-12-10 17:20:34,844|INFO   |   framework.py|112|Dequeue D->D: PutReq(K1=1)
+2022-12-10 17:20:34,844|INFO   |     dynamo1.py|106|D: store K1=1
+2022-12-10 17:20:34,844|INFO   |   framework.py| 42|Enqueue D->D: PutRsp(K1=1)
+2022-12-10 17:20:34,844|INFO   |   framework.py|112|Dequeue D->B: PutReq(K1=1)
+2022-12-10 17:20:34,844|INFO   |     dynamo1.py|106|B: store K1=1
+2022-12-10 17:20:34,844|INFO   |   framework.py| 42|Enqueue B->D: PutRsp(K1=1)
+2022-12-10 17:20:34,844|INFO   |   framework.py|112|Dequeue D->C: PutReq(K1=1)
+2022-12-10 17:20:34,844|INFO   |     dynamo1.py|106|C: store K1=1
+2022-12-10 17:20:34,844|INFO   |   framework.py| 42|Enqueue C->D: PutRsp(K1=1)
+2022-12-10 17:20:34,844|INFO   |   framework.py|112|Dequeue D->D: PutRsp(K1=1)
+2022-12-10 17:20:34,844|INFO   |   framework.py|112|Dequeue B->D: PutRsp(K1=1)
+2022-12-10 17:20:34,844|INFO   |     dynamo1.py|117|D: written 2 copies of K1=1 so done
+2022-12-10 17:20:34,844|DEBUG  |     dynamo1.py|118|  copies at ['D', 'B']
+2022-12-10 17:20:34,845|INFO   |   framework.py| 42|Enqueue D->a: ClientPutRsp(K1=1)
+2022-12-10 17:20:34,845|INFO   |   framework.py|112|Dequeue C->D: PutRsp(K1=1)
+2022-12-10 17:20:34,845|INFO   |   framework.py|112|Dequeue D->a: ClientPutRsp(K1=1)
+2022-12-10 17:20:34,845|INFO   | test_dynamo.py| 42|Reset after last test
+2022-12-10 17:20:34,910|INFO   |   logconfig.py| 27|Logger initialized, input filtering at level 10 to file pynamo.log
+2022-12-10 17:20:34,912|INFO   | test_dynamo.py| 33|Reset for next test
+2022-12-10 17:20:34,912|DEBUG  |        node.py| 45|Create node A
+2022-12-10 17:20:34,927|DEBUG  |       timer.py| 41|Start timer 4349821704 prio 15 for node A reason retry
+2022-12-10 17:20:34,927|DEBUG  |        node.py| 45|Create node B
+2022-12-10 17:20:34,939|DEBUG  |       timer.py| 41|Start timer 4357185992 prio 15 for node B reason retry
+2022-12-10 17:20:34,939|DEBUG  |        node.py| 45|Create node C
+2022-12-10 17:20:34,951|DEBUG  |       timer.py| 41|Start timer 4362103816 prio 15 for node C reason retry
+2022-12-10 17:20:34,951|DEBUG  |        node.py| 45|Create node D
+2022-12-10 17:20:34,971|DEBUG  |       timer.py| 41|Start timer 4367038600 prio 15 for node D reason retry
+2022-12-10 17:20:34,971|DEBUG  |        node.py| 45|Create node E
+2022-12-10 17:20:34,983|DEBUG  |       timer.py| 41|Start timer 4371980616 prio 15 for node E reason retry
+2022-12-10 17:20:34,983|DEBUG  |        node.py| 45|Create node F
+2022-12-10 17:20:34,995|DEBUG  |       timer.py| 41|Start timer 4376912712 prio 15 for node F reason retry
+2022-12-10 17:20:34,995|DEBUG  |        node.py| 45|Create node a
+2022-12-10 17:20:34,995|INFO   |   framework.py| 42|Enqueue a->D: ClientGet(K1=?)
+2022-12-10 17:20:34,995|DEBUG  |       timer.py| 41|Start timer 4376914440 prio 17 for node a reason ClientGet(K1=?)
+2022-12-10 17:20:34,995|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 0) pending timers
+2022-12-10 17:20:34,995|INFO   |   framework.py|112|Dequeue a->D: ClientGet(K1=?)
+2022-12-10 17:20:34,995|INFO   |   framework.py| 42|Enqueue D->D: GetReq(K1=?)
+2022-12-10 17:20:34,995|DEBUG  |       timer.py| 41|Start timer 4376914120 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:20:34,995|INFO   |   framework.py| 42|Enqueue D->B: GetReq(K1=?)
+2022-12-10 17:20:34,995|DEBUG  |       timer.py| 41|Start timer 4376915656 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:20:34,995|INFO   |   framework.py| 42|Enqueue D->C: GetReq(K1=?)
+2022-12-10 17:20:34,996|DEBUG  |       timer.py| 41|Start timer 4376914760 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:20:34,996|INFO   |   framework.py|112|Dequeue D->D: GetReq(K1=?)
+2022-12-10 17:20:34,996|INFO   |      dynamo.py|220|D: retrieve K1=?
+2022-12-10 17:20:34,996|INFO   |   framework.py| 42|Enqueue D->D: GetRsp(K1=None@None)
+2022-12-10 17:20:34,996|INFO   |   framework.py|112|Dequeue D->B: GetReq(K1=?)
+2022-12-10 17:20:34,996|INFO   |      dynamo.py|220|B: retrieve K1=?
+2022-12-10 17:20:34,996|INFO   |   framework.py| 42|Enqueue B->D: GetRsp(K1=None@None)
+2022-12-10 17:20:34,996|INFO   |   framework.py|112|Dequeue D->C: GetReq(K1=?)
+2022-12-10 17:20:34,996|INFO   |      dynamo.py|220|C: retrieve K1=?
+2022-12-10 17:20:34,996|INFO   |   framework.py| 42|Enqueue C->D: GetRsp(K1=None@None)
+2022-12-10 17:20:34,996|INFO   |   framework.py|112|Dequeue D->D: GetRsp(K1=None@None)
+2022-12-10 17:20:34,996|DEBUG  |       timer.py| 55|Cancel timer 4376914120 for node D reason GetReq(K1=?)
+2022-12-10 17:20:34,996|INFO   |   framework.py|112|Dequeue B->D: GetRsp(K1=None@None)
+2022-12-10 17:20:34,996|DEBUG  |       timer.py| 55|Cancel timer 4376915656 for node D reason GetReq(K1=?)
+2022-12-10 17:20:34,996|INFO   |      dynamo.py|231|D: read 2 copies of K1=? so done
+2022-12-10 17:20:34,996|DEBUG  |      dynamo.py|232|  copies at [('D', None), ('B', None)]
+2022-12-10 17:20:34,996|INFO   |   framework.py| 42|Enqueue D->a: ClientGetRsp(K1=[None]@[{}])
+2022-12-10 17:20:34,996|INFO   |   framework.py|112|Dequeue C->D: GetRsp(K1=None@None)
+2022-12-10 17:20:34,996|DEBUG  |       timer.py| 55|Cancel timer 4376914760 for node D reason GetReq(K1=?)
+2022-12-10 17:20:34,996|INFO   |   framework.py|112|Dequeue D->a: ClientGetRsp(K1=[None]@[{}])
+2022-12-10 17:20:34,996|DEBUG  |       timer.py| 55|Cancel timer 4376914440 for node a reason ClientGet(K1=?)
+2022-12-10 17:20:34,996|INFO   |   framework.py| 42|Enqueue a->D: ClientPut(K1=1@{})
+2022-12-10 17:20:34,996|DEBUG  |       timer.py| 41|Start timer 4376913096 prio 17 for node a reason ClientPut(K1=1@{})
+2022-12-10 17:20:34,996|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 0) pending timers
+2022-12-10 17:20:34,996|INFO   |   framework.py|112|Dequeue a->D: ClientPut(K1=1@{})
+2022-12-10 17:20:34,996|INFO   |      dynamo.py|138|D, 2: put K1=1
+2022-12-10 17:20:34,996|INFO   |   framework.py| 42|Enqueue D->D: PutReq(K1=1@{D:2})
+2022-12-10 17:20:34,996|DEBUG  |       timer.py| 41|Start timer 4376913480 prio 20 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:34,996|INFO   |   framework.py| 42|Enqueue D->B: PutReq(K1=1@{D:2})
+2022-12-10 17:20:34,996|DEBUG  |       timer.py| 41|Start timer 4376913224 prio 20 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:34,996|INFO   |   framework.py| 42|Enqueue D->C: PutReq(K1=1@{D:2})
+2022-12-10 17:20:34,996|DEBUG  |       timer.py| 41|Start timer 4376915016 prio 20 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:34,996|INFO   |   framework.py|112|Dequeue D->D: PutReq(K1=1@{D:2})
+2022-12-10 17:20:34,996|INFO   |      dynamo.py|188|D: store K1=1
+2022-12-10 17:20:34,996|INFO   |   framework.py| 42|Enqueue D->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:34,996|INFO   |   framework.py|112|Dequeue D->B: PutReq(K1=1@{D:2})
+2022-12-10 17:20:34,996|INFO   |      dynamo.py|188|B: store K1=1
+2022-12-10 17:20:34,997|INFO   |   framework.py| 42|Enqueue B->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:34,997|INFO   |   framework.py|112|Dequeue D->C: PutReq(K1=1@{D:2})
+2022-12-10 17:20:34,997|INFO   |      dynamo.py|188|C: store K1=1
+2022-12-10 17:20:34,997|INFO   |   framework.py| 42|Enqueue C->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:34,997|INFO   |   framework.py|112|Dequeue D->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:34,997|DEBUG  |       timer.py| 55|Cancel timer 4376913480 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:34,997|INFO   |   framework.py|112|Dequeue B->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:34,997|DEBUG  |       timer.py| 55|Cancel timer 4376913224 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:34,997|INFO   |      dynamo.py|205|D: written 2 copies of K1=1 so done
+2022-12-10 17:20:34,997|DEBUG  |      dynamo.py|206|  copies at ['D', 'B']
+2022-12-10 17:20:34,997|INFO   |   framework.py| 42|Enqueue D->a: ClientPutRsp(K1=1@{D:2})
+2022-12-10 17:20:34,997|INFO   |   framework.py|112|Dequeue C->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:34,997|DEBUG  |       timer.py| 55|Cancel timer 4376915016 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:34,997|INFO   |   framework.py|112|Dequeue D->a: ClientPutRsp(K1=1@{D:2})
+2022-12-10 17:20:34,997|DEBUG  |       timer.py| 55|Cancel timer 4376913096 for node a reason ClientPut(K1=1@{})
+2022-12-10 17:20:34,997|INFO   |   framework.py| 42|Enqueue a->D: ClientGet(K1=?)
+2022-12-10 17:20:34,997|DEBUG  |       timer.py| 41|Start timer 4376925064 prio 17 for node a reason ClientGet(K1=?)
+2022-12-10 17:20:34,997|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 0) pending timers
+2022-12-10 17:20:34,997|INFO   |   framework.py|112|Dequeue a->D: ClientGet(K1=?)
+2022-12-10 17:20:34,997|INFO   |   framework.py| 42|Enqueue D->D: GetReq(K1=?)
+2022-12-10 17:20:34,997|DEBUG  |       timer.py| 41|Start timer 4376925704 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:20:34,997|INFO   |   framework.py| 42|Enqueue D->B: GetReq(K1=?)
+2022-12-10 17:20:34,997|DEBUG  |       timer.py| 41|Start timer 4381858056 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:20:34,997|INFO   |   framework.py| 42|Enqueue D->C: GetReq(K1=?)
+2022-12-10 17:20:34,997|DEBUG  |       timer.py| 41|Start timer 4381858376 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:20:34,997|INFO   |   framework.py|112|Dequeue D->D: GetReq(K1=?)
+2022-12-10 17:20:34,997|INFO   |      dynamo.py|220|D: retrieve K1=?
+2022-12-10 17:20:34,997|INFO   |   framework.py| 42|Enqueue D->D: GetRsp(K1=1@{D:2})
+2022-12-10 17:20:34,997|INFO   |   framework.py|112|Dequeue D->B: GetReq(K1=?)
+2022-12-10 17:20:34,997|INFO   |      dynamo.py|220|B: retrieve K1=?
+2022-12-10 17:20:34,997|INFO   |   framework.py| 42|Enqueue B->D: GetRsp(K1=1@{D:2})
+2022-12-10 17:20:34,997|INFO   |   framework.py|112|Dequeue D->C: GetReq(K1=?)
+2022-12-10 17:20:34,997|INFO   |      dynamo.py|220|C: retrieve K1=?
+2022-12-10 17:20:34,997|INFO   |   framework.py| 42|Enqueue C->D: GetRsp(K1=1@{D:2})
+2022-12-10 17:20:34,997|INFO   |   framework.py|112|Dequeue D->D: GetRsp(K1=1@{D:2})
+2022-12-10 17:20:34,997|DEBUG  |       timer.py| 55|Cancel timer 4376925704 for node D reason GetReq(K1=?)
+2022-12-10 17:20:34,997|INFO   |   framework.py|112|Dequeue B->D: GetRsp(K1=1@{D:2})
+2022-12-10 17:20:34,997|DEBUG  |       timer.py| 55|Cancel timer 4381858056 for node D reason GetReq(K1=?)
+2022-12-10 17:20:34,997|INFO   |      dynamo.py|231|D: read 2 copies of K1=? so done
+2022-12-10 17:20:34,997|DEBUG  |      dynamo.py|232|  copies at [('B', 1), ('D', 1)]
+2022-12-10 17:20:34,997|INFO   |   framework.py| 42|Enqueue D->a: ClientGetRsp(K1=[1]@[{D:2}])
+2022-12-10 17:20:34,997|INFO   |   framework.py|112|Dequeue C->D: GetRsp(K1=1@{D:2})
+2022-12-10 17:20:34,997|DEBUG  |       timer.py| 55|Cancel timer 4381858376 for node D reason GetReq(K1=?)
+2022-12-10 17:20:34,997|INFO   |   framework.py|112|Dequeue D->a: ClientGetRsp(K1=[1]@[{D:2}])
+2022-12-10 17:20:34,997|DEBUG  |       timer.py| 55|Cancel timer 4376925064 for node a reason ClientGet(K1=?)
+2022-12-10 17:20:34,998|INFO   |   framework.py| 42|Enqueue a->D: ClientPut(K1=2@{D:2})
+2022-12-10 17:20:34,998|DEBUG  |       timer.py| 41|Start timer 4381859272 prio 17 for node a reason ClientPut(K1=2@{D:2})
+2022-12-10 17:20:34,998|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 0) pending timers
+2022-12-10 17:20:34,998|INFO   |   framework.py|112|Dequeue a->D: ClientPut(K1=2@{D:2})
+2022-12-10 17:20:34,998|INFO   |      dynamo.py|138|D, 4: put K1=2
+2022-12-10 17:20:34,998|INFO   |   framework.py| 42|Enqueue D->D: PutReq(K1=2@{D:4})
+2022-12-10 17:20:34,998|DEBUG  |       timer.py| 41|Start timer 4381909384 prio 20 for node D reason PutReq(K1=2@{D:4})
+2022-12-10 17:20:34,998|INFO   |   framework.py| 42|Enqueue D->B: PutReq(K1=2@{D:4})
+2022-12-10 17:20:34,998|DEBUG  |       timer.py| 41|Start timer 4381909960 prio 20 for node D reason PutReq(K1=2@{D:4})
+2022-12-10 17:20:34,998|INFO   |   framework.py| 42|Enqueue D->C: PutReq(K1=2@{D:4})
+2022-12-10 17:20:34,998|DEBUG  |       timer.py| 41|Start timer 4381910280 prio 20 for node D reason PutReq(K1=2@{D:4})
+2022-12-10 17:20:34,998|INFO   |   framework.py|112|Dequeue D->D: PutReq(K1=2@{D:4})
+2022-12-10 17:20:34,998|INFO   |      dynamo.py|188|D: store K1=2
+2022-12-10 17:20:34,998|INFO   |   framework.py| 42|Enqueue D->D: PutRsp(K1=2@{D:4})
+2022-12-10 17:20:34,998|INFO   |   framework.py|112|Dequeue D->B: PutReq(K1=2@{D:4})
+2022-12-10 17:20:34,998|INFO   |      dynamo.py|188|B: store K1=2
+2022-12-10 17:20:34,998|INFO   |   framework.py| 42|Enqueue B->D: PutRsp(K1=2@{D:4})
+2022-12-10 17:20:34,998|INFO   |   framework.py|112|Dequeue D->C: PutReq(K1=2@{D:4})
+2022-12-10 17:20:34,998|INFO   |      dynamo.py|188|C: store K1=2
+2022-12-10 17:20:34,998|INFO   |   framework.py| 42|Enqueue C->D: PutRsp(K1=2@{D:4})
+2022-12-10 17:20:34,998|INFO   |   framework.py|112|Dequeue D->D: PutRsp(K1=2@{D:4})
+2022-12-10 17:20:34,998|DEBUG  |       timer.py| 55|Cancel timer 4381909384 for node D reason PutReq(K1=2@{D:4})
+2022-12-10 17:20:34,998|INFO   |   framework.py|112|Dequeue B->D: PutRsp(K1=2@{D:4})
+2022-12-10 17:20:34,998|DEBUG  |       timer.py| 55|Cancel timer 4381909960 for node D reason PutReq(K1=2@{D:4})
+2022-12-10 17:20:34,998|INFO   |      dynamo.py|205|D: written 2 copies of K1=2 so done
+2022-12-10 17:20:34,998|DEBUG  |      dynamo.py|206|  copies at ['D', 'B']
+2022-12-10 17:20:34,998|INFO   |   framework.py| 42|Enqueue D->a: ClientPutRsp(K1=2@{D:4})
+2022-12-10 17:20:34,998|INFO   |   framework.py|112|Dequeue C->D: PutRsp(K1=2@{D:4})
+2022-12-10 17:20:34,998|DEBUG  |       timer.py| 55|Cancel timer 4381910280 for node D reason PutReq(K1=2@{D:4})
+2022-12-10 17:20:34,998|INFO   |   framework.py|112|Dequeue D->a: ClientPutRsp(K1=2@{D:4})
+2022-12-10 17:20:34,998|DEBUG  |       timer.py| 55|Cancel timer 4381859272 for node a reason ClientPut(K1=2@{D:2})
+2022-12-10 17:20:35,001|INFO   | test_dynamo.py| 42|Reset after last test
+2022-12-10 17:20:35,089|INFO   |   logconfig.py| 27|Logger initialized, input filtering at level 10 to file pynamo.log
+2022-12-10 17:20:35,091|INFO   | test_dynamo.py| 33|Reset for next test
+2022-12-10 17:20:35,091|DEBUG  |        node.py| 45|Create node A
+2022-12-10 17:20:35,103|DEBUG  |       timer.py| 41|Start timer 4349641480 prio 15 for node A reason retry
+2022-12-10 17:20:35,103|DEBUG  |        node.py| 45|Create node B
+2022-12-10 17:20:35,115|DEBUG  |       timer.py| 41|Start timer 4357005640 prio 15 for node B reason retry
+2022-12-10 17:20:35,115|DEBUG  |        node.py| 45|Create node C
+2022-12-10 17:20:35,127|DEBUG  |       timer.py| 41|Start timer 4361923464 prio 15 for node C reason retry
+2022-12-10 17:20:35,127|DEBUG  |        node.py| 45|Create node D
+2022-12-10 17:20:35,147|DEBUG  |       timer.py| 41|Start timer 4366858248 prio 15 for node D reason retry
+2022-12-10 17:20:35,147|DEBUG  |        node.py| 45|Create node E
+2022-12-10 17:20:35,159|DEBUG  |       timer.py| 41|Start timer 4371804360 prio 15 for node E reason retry
+2022-12-10 17:20:35,159|DEBUG  |        node.py| 45|Create node F
+2022-12-10 17:20:35,171|DEBUG  |       timer.py| 41|Start timer 4376736456 prio 15 for node F reason retry
+2022-12-10 17:20:35,171|DEBUG  |        node.py| 45|Create node a
+2022-12-10 17:20:35,171|DEBUG  |        node.py| 45|Create node b
+2022-12-10 17:20:35,171|INFO   |   framework.py| 42|Enqueue a->D: ClientGet(K1=?)
+2022-12-10 17:20:35,172|DEBUG  |       timer.py| 41|Start timer 4376737864 prio 17 for node a reason ClientGet(K1=?)
+2022-12-10 17:20:35,172|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 0) pending timers
+2022-12-10 17:20:35,172|INFO   |   framework.py|112|Dequeue a->D: ClientGet(K1=?)
+2022-12-10 17:20:35,172|INFO   |   framework.py| 42|Enqueue D->D: GetReq(K1=?)
+2022-12-10 17:20:35,172|DEBUG  |       timer.py| 41|Start timer 4376739784 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:20:35,172|INFO   |   framework.py| 42|Enqueue D->B: GetReq(K1=?)
+2022-12-10 17:20:35,172|DEBUG  |       timer.py| 41|Start timer 4376738504 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:20:35,172|INFO   |   framework.py| 42|Enqueue D->C: GetReq(K1=?)
+2022-12-10 17:20:35,172|DEBUG  |       timer.py| 41|Start timer 4376737352 prio 20 for node D reason GetReq(K1=?)
+2022-12-10 17:20:35,172|INFO   |   framework.py|112|Dequeue D->D: GetReq(K1=?)
+2022-12-10 17:20:35,172|INFO   |      dynamo.py|220|D: retrieve K1=?
+2022-12-10 17:20:35,172|INFO   |   framework.py| 42|Enqueue D->D: GetRsp(K1=None@None)
+2022-12-10 17:20:35,172|INFO   |   framework.py|112|Dequeue D->B: GetReq(K1=?)
+2022-12-10 17:20:35,172|INFO   |      dynamo.py|220|B: retrieve K1=?
+2022-12-10 17:20:35,172|INFO   |   framework.py| 42|Enqueue B->D: GetRsp(K1=None@None)
+2022-12-10 17:20:35,172|INFO   |   framework.py|112|Dequeue D->C: GetReq(K1=?)
+2022-12-10 17:20:35,172|INFO   |      dynamo.py|220|C: retrieve K1=?
+2022-12-10 17:20:35,172|INFO   |   framework.py| 42|Enqueue C->D: GetRsp(K1=None@None)
+2022-12-10 17:20:35,172|INFO   |   framework.py|112|Dequeue D->D: GetRsp(K1=None@None)
+2022-12-10 17:20:35,172|DEBUG  |       timer.py| 55|Cancel timer 4376739784 for node D reason GetReq(K1=?)
+2022-12-10 17:20:35,172|INFO   |   framework.py|112|Dequeue B->D: GetRsp(K1=None@None)
+2022-12-10 17:20:35,172|DEBUG  |       timer.py| 55|Cancel timer 4376738504 for node D reason GetReq(K1=?)
+2022-12-10 17:20:35,172|INFO   |      dynamo.py|231|D: read 2 copies of K1=? so done
+2022-12-10 17:20:35,172|DEBUG  |      dynamo.py|232|  copies at [('B', None), ('D', None)]
+2022-12-10 17:20:35,172|INFO   |   framework.py| 42|Enqueue D->a: ClientGetRsp(K1=[None]@[{}])
+2022-12-10 17:20:35,172|INFO   |   framework.py|112|Dequeue C->D: GetRsp(K1=None@None)
+2022-12-10 17:20:35,172|DEBUG  |       timer.py| 55|Cancel timer 4376737352 for node D reason GetReq(K1=?)
+2022-12-10 17:20:35,172|INFO   |   framework.py|112|Dequeue D->a: ClientGetRsp(K1=[None]@[{}])
+2022-12-10 17:20:35,172|DEBUG  |       timer.py| 55|Cancel timer 4376737864 for node a reason ClientGet(K1=?)
+2022-12-10 17:20:35,172|INFO   |   framework.py| 42|Enqueue a->D: ClientPut(K1=1@{})
+2022-12-10 17:20:35,172|DEBUG  |       timer.py| 41|Start timer 4376737224 prio 17 for node a reason ClientPut(K1=1@{})
+2022-12-10 17:20:35,172|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 0) pending timers
+2022-12-10 17:20:35,172|INFO   |   framework.py|112|Dequeue a->D: ClientPut(K1=1@{})
+2022-12-10 17:20:35,172|INFO   |      dynamo.py|138|D, 2: put K1=1
+2022-12-10 17:20:35,172|INFO   |   framework.py| 42|Enqueue D->D: PutReq(K1=1@{D:2})
+2022-12-10 17:20:35,172|DEBUG  |       timer.py| 41|Start timer 4376738376 prio 20 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:35,172|INFO   |   framework.py| 42|Enqueue D->B: PutReq(K1=1@{D:2})
+2022-12-10 17:20:35,172|DEBUG  |       timer.py| 41|Start timer 4376736968 prio 20 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:35,172|INFO   |   framework.py| 42|Enqueue D->C: PutReq(K1=1@{D:2})
+2022-12-10 17:20:35,172|DEBUG  |       timer.py| 41|Start timer 4376738760 prio 20 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:35,172|INFO   |   framework.py|112|Dequeue D->D: PutReq(K1=1@{D:2})
+2022-12-10 17:20:35,173|INFO   |      dynamo.py|188|D: store K1=1
+2022-12-10 17:20:35,173|INFO   |   framework.py| 42|Enqueue D->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:35,173|INFO   |   framework.py|112|Dequeue D->B: PutReq(K1=1@{D:2})
+2022-12-10 17:20:35,173|INFO   |      dynamo.py|188|B: store K1=1
+2022-12-10 17:20:35,173|INFO   |   framework.py| 42|Enqueue B->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:35,173|INFO   |   framework.py|112|Dequeue D->C: PutReq(K1=1@{D:2})
+2022-12-10 17:20:35,173|INFO   |      dynamo.py|188|C: store K1=1
+2022-12-10 17:20:35,173|INFO   |   framework.py| 42|Enqueue C->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:35,173|INFO   |   framework.py|112|Dequeue D->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:35,173|DEBUG  |       timer.py| 55|Cancel timer 4376738376 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:35,173|INFO   |   framework.py|112|Dequeue B->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:35,173|DEBUG  |       timer.py| 55|Cancel timer 4376736968 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:35,173|INFO   |      dynamo.py|205|D: written 2 copies of K1=1 so done
+2022-12-10 17:20:35,173|DEBUG  |      dynamo.py|206|  copies at ['D', 'B']
+2022-12-10 17:20:35,173|INFO   |   framework.py| 42|Enqueue D->a: ClientPutRsp(K1=1@{D:2})
+2022-12-10 17:20:35,173|INFO   |   framework.py|112|Dequeue C->D: PutRsp(K1=1@{D:2})
+2022-12-10 17:20:35,173|DEBUG  |       timer.py| 55|Cancel timer 4376738760 for node D reason PutReq(K1=1@{D:2})
+2022-12-10 17:20:35,173|INFO   |   framework.py|112|Dequeue D->a: ClientPutRsp(K1=1@{D:2})
+2022-12-10 17:20:35,173|DEBUG  |       timer.py| 55|Cancel timer 4376737224 for node a reason ClientPut(K1=1@{})
+2022-12-10 17:20:35,173|INFO   |   framework.py| 42|Enqueue a->D: ClientPut(K1=11@{D:2})
+2022-12-10 17:20:35,173|DEBUG  |       timer.py| 41|Start timer 4376745352 prio 17 for node a reason ClientPut(K1=11@{D:2})
+2022-12-10 17:20:35,173|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 2) pending timers
+2022-12-10 17:20:35,173|INFO   |   framework.py|112|Dequeue a->D: ClientPut(K1=11@{D:2})
+2022-12-10 17:20:35,173|INFO   |      dynamo.py|138|D, 3: put K1=11
+2022-12-10 17:20:35,173|INFO   |   framework.py| 42|Enqueue D->D: PutReq(K1=11@{D:3})
+2022-12-10 17:20:35,173|DEBUG  |       timer.py| 41|Start timer 4381677704 prio 20 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 17:20:35,173|INFO   |   framework.py| 42|Enqueue D->B: PutReq(K1=11@{D:3})
+2022-12-10 17:20:35,173|DEBUG  |       timer.py| 41|Start timer 4381678536 prio 20 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 17:20:35,173|INFO   |   framework.py| 42|Enqueue D->C: PutReq(K1=11@{D:3})
+2022-12-10 17:20:35,173|DEBUG  |       timer.py| 41|Start timer 4381678856 prio 20 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 17:20:35,173|INFO   |   framework.py|112|Dequeue D->D: PutReq(K1=11@{D:3})
+2022-12-10 17:20:35,173|INFO   |      dynamo.py|188|D: store K1=11
+2022-12-10 17:20:35,173|INFO   |   framework.py| 42|Enqueue D->D: PutRsp(K1=11@{D:3})
+2022-12-10 17:20:35,173|INFO   |   framework.py|109|Drop D->B: PutReq(K1=11@{D:3}) as route down
+2022-12-10 17:20:35,173|INFO   |   framework.py|109|Drop D->C: PutReq(K1=11@{D:3}) as route down
+2022-12-10 17:20:35,173|INFO   |   framework.py|112|Dequeue D->D: PutRsp(K1=11@{D:3})
+2022-12-10 17:20:35,173|DEBUG  |       timer.py| 55|Cancel timer 4381677704 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 17:20:35,173|DEBUG  |       timer.py| 67|Pop timer 4381678536 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 17:20:35,174|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node D
+2022-12-10 17:20:35,174|INFO   |      dynamo.py| 98|Node D now treating node B as failed
+2022-12-10 17:20:35,174|INFO   |   framework.py| 42|Enqueue D->F: PutReq(K1=11@{D:3})
+2022-12-10 17:20:35,174|DEBUG  |       timer.py| 41|Start timer 4381679432 prio 20 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 17:20:35,174|INFO   |   framework.py|101|Start of schedule: 1 (limit 32763) pending messages, 9 (limit 1) pending timers
+2022-12-10 17:20:35,174|INFO   |   framework.py|112|Dequeue D->F: PutReq(K1=11@{D:3})
+2022-12-10 17:20:35,174|INFO   |      dynamo.py|188|F: store K1=11
+2022-12-10 17:20:35,174|INFO   |   framework.py| 42|Enqueue F->D: PutRsp(K1=11@{D:3})
+2022-12-10 17:20:35,174|INFO   |   framework.py|112|Dequeue F->D: PutRsp(K1=11@{D:3})
+2022-12-10 17:20:35,174|DEBUG  |       timer.py| 55|Cancel timer 4381679432 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 17:20:35,174|INFO   |      dynamo.py|205|D: written 2 copies of K1=11 so done
+2022-12-10 17:20:35,174|DEBUG  |      dynamo.py|206|  copies at ['D', 'F']
+2022-12-10 17:20:35,174|INFO   |   framework.py| 42|Enqueue D->a: ClientPutRsp(K1=11@{D:3})
+2022-12-10 17:20:35,174|INFO   |   framework.py|112|Dequeue D->a: ClientPutRsp(K1=11@{D:3})
+2022-12-10 17:20:35,174|DEBUG  |       timer.py| 55|Cancel timer 4376745352 for node a reason ClientPut(K1=11@{D:2})
+2022-12-10 17:20:35,174|DEBUG  |       timer.py| 67|Pop timer 4381678856 for node D reason PutReq(K1=11@{D:3})
+2022-12-10 17:20:35,174|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node D
+2022-12-10 17:20:35,174|INFO   |      dynamo.py| 98|Node D now treating node C as failed
+2022-12-10 17:20:35,174|INFO   |   framework.py| 42|Enqueue b->D: ClientGet(K1=?)
+2022-12-10 17:20:35,174|DEBUG  |       timer.py| 41|Start timer 4381677320 prio 17 for node b reason ClientGet(K1=?)
+2022-12-10 17:20:35,174|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 1) pending timers
+2022-12-10 17:20:35,174|INFO   |   framework.py|109|Drop b->D: ClientGet(K1=?) as route down
+2022-12-10 17:20:35,174|DEBUG  |       timer.py| 67|Pop timer 4381677320 for node b reason ClientGet(K1=?)
+2022-12-10 17:20:35,174|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node b
+2022-12-10 17:20:35,174|INFO   |      dynamo.py|311|Get request timed out; retrying
+2022-12-10 17:20:35,174|INFO   |   framework.py| 42|Enqueue b->A: ClientGet(K1=?)
+2022-12-10 17:20:35,174|DEBUG  |       timer.py| 41|Start timer 4381729992 prio 17 for node b reason ClientGet(K1=?)
+2022-12-10 17:20:35,174|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 1) pending timers
+2022-12-10 17:20:35,174|INFO   |   framework.py|112|Dequeue b->A: ClientGet(K1=?)
+2022-12-10 17:20:35,174|INFO   |      dynamo.py|168|get(K1=?) maps to [<dynamo.DynamoNode object at 0x103fdaf88>, <dynamo.DynamoNode object at 0x103b2a788>, <dynamo.DynamoNode object at 0x103b2a4c8>]
+2022-12-10 17:20:35,174|INFO   |   framework.py| 83|Enqueue(fwd) A->D: ClientGet(K1=?)
+2022-12-10 17:20:35,174|INFO   |   framework.py|109|Drop b->D: ClientGet(K1=?) as route down
+2022-12-10 17:20:35,174|DEBUG  |       timer.py| 67|Pop timer 4381729992 for node b reason ClientGet(K1=?)
+2022-12-10 17:20:35,174|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node b
+2022-12-10 17:20:35,174|INFO   |      dynamo.py|311|Get request timed out; retrying
+2022-12-10 17:20:35,174|INFO   |   framework.py| 42|Enqueue b->C: ClientGet(K1=?)
+2022-12-10 17:20:35,174|DEBUG  |       timer.py| 41|Start timer 4381730440 prio 17 for node b reason ClientGet(K1=?)
+2022-12-10 17:20:35,174|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 1) pending timers
+2022-12-10 17:20:35,174|INFO   |   framework.py|112|Dequeue b->C: ClientGet(K1=?)
+2022-12-10 17:20:35,174|INFO   |   framework.py| 42|Enqueue C->D: GetReq(K1=?)
+2022-12-10 17:20:35,174|DEBUG  |       timer.py| 41|Start timer 4381730952 prio 20 for node C reason GetReq(K1=?)
+2022-12-10 17:20:35,174|INFO   |   framework.py| 42|Enqueue C->B: GetReq(K1=?)
+2022-12-10 17:20:35,174|DEBUG  |       timer.py| 41|Start timer 4381731272 prio 20 for node C reason GetReq(K1=?)
+2022-12-10 17:20:35,174|INFO   |   framework.py| 42|Enqueue C->C: GetReq(K1=?)
+2022-12-10 17:20:35,174|DEBUG  |       timer.py| 41|Start timer 4381731592 prio 20 for node C reason GetReq(K1=?)
+2022-12-10 17:20:35,174|INFO   |   framework.py|109|Drop C->D: GetReq(K1=?) as route down
+2022-12-10 17:20:35,175|INFO   |   framework.py|112|Dequeue C->B: GetReq(K1=?)
+2022-12-10 17:20:35,175|INFO   |      dynamo.py|220|B: retrieve K1=?
+2022-12-10 17:20:35,175|INFO   |   framework.py| 42|Enqueue B->C: GetRsp(K1=1@{D:2})
+2022-12-10 17:20:35,175|INFO   |   framework.py|112|Dequeue C->C: GetReq(K1=?)
+2022-12-10 17:20:35,175|INFO   |      dynamo.py|220|C: retrieve K1=?
+2022-12-10 17:20:35,175|INFO   |   framework.py| 42|Enqueue C->C: GetRsp(K1=1@{D:2})
+2022-12-10 17:20:35,175|INFO   |   framework.py|112|Dequeue B->C: GetRsp(K1=1@{D:2})
+2022-12-10 17:20:35,175|DEBUG  |       timer.py| 55|Cancel timer 4381731272 for node C reason GetReq(K1=?)
+2022-12-10 17:20:35,175|INFO   |   framework.py|112|Dequeue C->C: GetRsp(K1=1@{D:2})
+2022-12-10 17:20:35,175|DEBUG  |       timer.py| 55|Cancel timer 4381731592 for node C reason GetReq(K1=?)
+2022-12-10 17:20:35,175|INFO   |      dynamo.py|231|C: read 2 copies of K1=? so done
+2022-12-10 17:20:35,175|DEBUG  |      dynamo.py|232|  copies at [('C', 1), ('B', 1)]
+2022-12-10 17:20:35,175|INFO   |   framework.py| 42|Enqueue C->b: ClientGetRsp(K1=[1]@[{D:2}])
+2022-12-10 17:20:35,175|INFO   |   framework.py|112|Dequeue C->b: ClientGetRsp(K1=[1]@[{D:2}])
+2022-12-10 17:20:35,175|DEBUG  |       timer.py| 55|Cancel timer 4381730440 for node b reason ClientGet(K1=?)
+2022-12-10 17:20:35,175|DEBUG  |       timer.py| 67|Pop timer 4381730952 for node C reason GetReq(K1=?)
+2022-12-10 17:20:35,175|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node C
+2022-12-10 17:20:35,175|INFO   |      dynamo.py| 98|Node C now treating node D as failed
+2022-12-10 17:20:35,175|INFO   |   framework.py| 42|Enqueue b->A: ClientPut(K1=21@{D:2})
+2022-12-10 17:20:35,175|DEBUG  |       timer.py| 41|Start timer 4381732168 prio 17 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 17:20:35,175|INFO   |   framework.py|101|Start of schedule: 1 (limit 32768) pending messages, 7 (limit 3) pending timers
+2022-12-10 17:20:35,175|INFO   |   framework.py|112|Dequeue b->A: ClientPut(K1=21@{D:2})
+2022-12-10 17:20:35,175|INFO   |      dynamo.py|131|put(K1=21) maps to [<dynamo.DynamoNode object at 0x103fdaf88>, <dynamo.DynamoNode object at 0x103b2a788>, <dynamo.DynamoNode object at 0x103b2a4c8>]
+2022-12-10 17:20:35,175|INFO   |   framework.py| 83|Enqueue(fwd) A->D: ClientPut(K1=21@{D:2})
+2022-12-10 17:20:35,175|INFO   |   framework.py|109|Drop b->D: ClientPut(K1=21@{D:2}) as route down
+2022-12-10 17:20:35,175|DEBUG  |       timer.py| 67|Pop timer 4381732168 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 17:20:35,175|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node b
+2022-12-10 17:20:35,175|INFO   |      dynamo.py|308|Put request timed out; retrying
+2022-12-10 17:20:35,175|INFO   |   framework.py| 42|Enqueue b->F: ClientPut(K1=21@{D:2})
+2022-12-10 17:20:35,175|DEBUG  |       timer.py| 41|Start timer 4381737544 prio 17 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 17:20:35,175|INFO   |   framework.py|101|Start of schedule: 1 (limit 32766) pending messages, 7 (limit 2) pending timers
+2022-12-10 17:20:35,175|INFO   |   framework.py|109|Drop b->F: ClientPut(K1=21@{D:2}) as route down
+2022-12-10 17:20:35,175|DEBUG  |       timer.py| 67|Pop timer 4381737544 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 17:20:35,175|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node b
+2022-12-10 17:20:35,175|INFO   |      dynamo.py|308|Put request timed out; retrying
+2022-12-10 17:20:35,175|INFO   |   framework.py| 42|Enqueue b->B: ClientPut(K1=21@{D:2})
+2022-12-10 17:20:35,175|DEBUG  |       timer.py| 41|Start timer 4381738056 prio 17 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 17:20:35,175|INFO   |   framework.py|101|Start of schedule: 1 (limit 32765) pending messages, 7 (limit 1) pending timers
+2022-12-10 17:20:35,175|INFO   |   framework.py|112|Dequeue b->B: ClientPut(K1=21@{D:2})
+2022-12-10 17:20:35,175|INFO   |      dynamo.py|138|B, 1: put K1=21
+2022-12-10 17:20:35,175|INFO   |   framework.py| 42|Enqueue B->D: PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:35,175|DEBUG  |       timer.py| 41|Start timer 4381737160 prio 20 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:35,175|INFO   |   framework.py| 42|Enqueue B->B: PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:35,175|DEBUG  |       timer.py| 41|Start timer 4381739272 prio 20 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:35,176|INFO   |   framework.py| 42|Enqueue B->C: PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:35,176|DEBUG  |       timer.py| 41|Start timer 4381739592 prio 20 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:35,176|INFO   |   framework.py|109|Drop B->D: PutReq(K1=21@{B:1, D:2}) as route down
+2022-12-10 17:20:35,176|INFO   |   framework.py|112|Dequeue B->B: PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:35,176|INFO   |      dynamo.py|188|B: store K1=21
+2022-12-10 17:20:35,176|INFO   |   framework.py| 42|Enqueue B->B: PutRsp(K1=21@{B:1, D:2})
+2022-12-10 17:20:35,176|INFO   |   framework.py|112|Dequeue B->C: PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:35,176|INFO   |      dynamo.py|188|C: store K1=21
+2022-12-10 17:20:35,176|INFO   |   framework.py| 42|Enqueue C->B: PutRsp(K1=21@{B:1, D:2})
+2022-12-10 17:20:35,176|INFO   |   framework.py|112|Dequeue B->B: PutRsp(K1=21@{B:1, D:2})
+2022-12-10 17:20:35,176|DEBUG  |       timer.py| 55|Cancel timer 4381739272 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:35,176|INFO   |   framework.py|112|Dequeue C->B: PutRsp(K1=21@{B:1, D:2})
+2022-12-10 17:20:35,176|DEBUG  |       timer.py| 55|Cancel timer 4381739592 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:35,176|INFO   |      dynamo.py|205|B: written 2 copies of K1=21 so done
+2022-12-10 17:20:35,176|DEBUG  |      dynamo.py|206|  copies at ['B', 'C']
+2022-12-10 17:20:35,176|INFO   |   framework.py| 42|Enqueue B->b: ClientPutRsp(K1=21@{B:1, D:2})
+2022-12-10 17:20:35,176|INFO   |   framework.py|112|Dequeue B->b: ClientPutRsp(K1=21@{B:1, D:2})
+2022-12-10 17:20:35,176|DEBUG  |       timer.py| 55|Cancel timer 4381738056 for node b reason ClientPut(K1=21@{D:2})
+2022-12-10 17:20:35,176|DEBUG  |       timer.py| 67|Pop timer 4381737160 for node B reason PutReq(K1=21@{B:1, D:2})
+2022-12-10 17:20:35,176|DEBUG  |   framework.py| 77|Call on to rsp_timer_pop() for node B
+2022-12-10 17:20:35,176|INFO   |      dynamo.py| 98|Node B now treating node D as failed
+2022-12-10 17:20:35,179|INFO   | test_dynamo.py| 42|Reset after last test
