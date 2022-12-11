@@ -9,7 +9,7 @@ import logging
 sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
 
 from framework import Framework, reset_all
-from node import Node
+from basenode import BaseNode
 from history import History
 import history
 import logconfig
@@ -26,11 +26,11 @@ class SimpleTestCase(unittest.TestCase):
     def setUp(self):
         _logger.info("Reset for next test")
         reset_all()
-        dynamo.DynamoNode.reset()
-        dynamo.DynamoNode.reset()
-        dynamo.DynamoNode.reset()
-        dynamo.DynamoNode.reset()
-        dynamo.DynamoNode.reset()
+        dynamo.Node.reset()
+        dynamo.Node.reset()
+        dynamo.Node.reset()
+        dynamo.Node.reset()
+        dynamo.Node.reset()
 
     def tearDown(self):
         _logger.info("Reset after last test")
@@ -38,16 +38,16 @@ class SimpleTestCase(unittest.TestCase):
 
     def test_simple_put(self):
         for _ in range(6):
-            dynamo.DynamoNode()
-        a = dynamo.DynamoClientNode('a')
+            dynamo.Node()
+        a = dynamo.Client('a')
         a.put('K1', None, 1)
         Framework.schedule()
         print(History.ladder())
 
     def test_simple_get(self):
         for _ in range(6):
-            dynamo.DynamoNode()
-        a = dynamo.DynamoClientNode('a')
+            dynamo.Node()
+        a = dynamo.Client('a')
         a.put('K1', None, 1)
         Framework.schedule()
         from_line = len(History.history)
@@ -57,9 +57,9 @@ class SimpleTestCase(unittest.TestCase):
 
     def test_double_put(self):
         for _ in range(6):
-            dynamo.DynamoNode()
-        a = dynamo.DynamoClientNode('a')
-        b = dynamo.DynamoClientNode('b')
+            dynamo.Node()
+        a = dynamo.Client('a')
+        b = dynamo.Client('b')
         a.put('K1', None, 1)
         Framework.schedule(1)
         b.put('K2', None, 17)
@@ -74,9 +74,9 @@ class SimpleTestCase(unittest.TestCase):
 
     def put_fail_initial_node(self, cls):
         for _ in range(6):
-            cls.DynamoNode()
-        a = cls.DynamoClientNode('a')
-        destnode = random.choice(cls.DynamoNode.nodelist)
+            cls.Node()
+        a = cls.Client('a')
+        destnode = random.choice(cls.Node.nodelist)
         a.put('K1', None, 1, destnode=destnode)
         # Fail at the forwarding node before it gets a chance to forward
         destnode.fail()
@@ -91,9 +91,9 @@ class SimpleTestCase(unittest.TestCase):
 
     def put_fail_initial_node2(self, cls):
         for _ in range(6):
-            dynamo.DynamoNode()
-        a = dynamo.DynamoClientNode('a')
-        destnode = random.choice(dynamo.DynamoNode.nodelist)
+            dynamo.Node()
+        a = dynamo.Client('a')
+        destnode = random.choice(dynamo.Node.nodelist)
         a.put('K1', None, 1, destnode=destnode)
         # Fail at the forwarding node after it gets a chance to forward
         Framework.schedule(1)
@@ -109,11 +109,11 @@ class SimpleTestCase(unittest.TestCase):
 
     def put_fail_node2(self, cls):
         for _ in range(6):
-            cls.DynamoNode()
-        a = cls.DynamoClientNode('a')
+            cls.Node()
+        a = cls.Client('a')
         a.put('K1', None, 1)
         # Fail the second node in the preference list
-        pref_list = cls.DynamoNode.chash.find_nodes('K1', 3)[0]
+        pref_list = cls.Node.consistent_hash_tbl.find_nodes('K1', 3)[0]
         Framework.schedule(1)
         pref_list[1].fail()
         Framework.schedule()
@@ -133,10 +133,10 @@ class SimpleTestCase(unittest.TestCase):
     def put_fail_nodes23(self, cls):
         # Set up 6 nodes and 1 client node
         for _ in range(6):
-            cls.DynamoNode()
-        a = cls.DynamoClientNode('a')
+            cls.Node()
+        a = cls.Client('a')
         # Fail the second and third node in the preference list
-        pref_list = cls.DynamoNode.chash.find_nodes('K1', 5)[0]
+        pref_list = cls.Node.consistent_hash_tbl.find_nodes('K1', 5)[0]
         a.put('K1', None, 1, destnode=pref_list[0])
         Framework.schedule(1)
         pref_list[1].fail()
@@ -215,20 +215,20 @@ class SimpleTestCase(unittest.TestCase):
     def get_put_get_put(self):
         cls = dynamo
         for _ in range(6):
-            cls.DynamoNode()
-        a = cls.DynamoClientNode('a')
-        pref_list = cls.DynamoNode.chash.find_nodes('K1', 5)[0]
+            cls.Node()
+        a = cls.Client('a')
+        pref_list = cls.Node.consistent_hash_tbl.find_nodes('K1', 5)[0]
         coordinator = pref_list[0]
         # Send in first get-then-put
         a.get('K1', destnode=coordinator)
         Framework.schedule(timers_to_process=0)
-        getrsp = a.last_msg
+        getrsp = a.prev_msg
         a.put('K1', getrsp.metadata, 1, destnode=coordinator)
         Framework.schedule(timers_to_process=0)
         # Send in second get-then-put
         a.get('K1', destnode=coordinator)
         Framework.schedule(timers_to_process=0)
-        getrsp = a.last_msg
+        getrsp = a.prev_msg
         a.put('K1', getrsp.metadata, 2, destnode=coordinator)
         Framework.schedule(timers_to_process=0)
         return (a, pref_list)
@@ -245,10 +245,10 @@ class SimpleTestCase(unittest.TestCase):
         # Send in a get-then-put-put.
         a.get('K1', destnode=coordinator)
         Framework.schedule(timers_to_process=0)
-        getrsp = a.last_msg
+        getrsp = a.prev_msg
         a.put('K1', getrsp.metadata, 3, destnode=coordinator)
         Framework.schedule(timers_to_process=0)
-        metadata = [a.last_msg.metadata]  # PutRsp has a single VectorClock
+        metadata = [a.prev_msg.metadata]  # PutRsp has a single VectorClock
         a.put('K1', metadata, 4, destnode=coordinator)
         Framework.schedule(timers_to_process=0)
 
@@ -269,7 +269,7 @@ class SimpleTestCase(unittest.TestCase):
         coordinator = pref_list[0]
         self.get_put_put(a, coordinator)
         from_line = len(History.history)
-        metadata = [a.last_msg.metadata]  # PutRsp has a single VectorClock
+        metadata = [a.prev_msg.metadata]  # PutRsp has a single VectorClock
         # Fail the coordinator
         coordinator.fail()
         # Send in another put
@@ -285,25 +285,25 @@ class SimpleTestCase(unittest.TestCase):
         """Show a network partition"""
         dynamomessages._show_metadata = True
         cls = dynamo
-        A = cls.DynamoNode()
-        B = cls.DynamoNode()
-        C = cls.DynamoNode()
-        D = cls.DynamoNode()
-        E = cls.DynamoNode()
-        F = cls.DynamoNode()
-        a = cls.DynamoClientNode('a')
-        b = cls.DynamoClientNode('b')
+        A = cls.Node()
+        B = cls.Node()
+        C = cls.Node()
+        D = cls.Node()
+        E = cls.Node()
+        F = cls.Node()
+        a = cls.Client('a')
+        b = cls.Client('b')
         all_nodes = {A, B, C, D, E, F, a, b}
-        pref_list = cls.DynamoNode.chash.find_nodes('K1', 5)[0]
+        pref_list = cls.Node.consistent_hash_tbl.find_nodes('K1', 5)[0]
         coordinator = pref_list[0]
         # Set in a get-then-put
         # Send in first get-then-put
         a.get('K1', destnode=coordinator)
         Framework.schedule(timers_to_process=0)
-        getrsp = a.last_msg
+        getrsp = a.prev_msg
         a.put('K1', getrsp.metadata, 1, destnode=coordinator)
         Framework.schedule(timers_to_process=0)
-        a_metadata = [a.last_msg.metadata]  # PutRsp has a single VectorClock
+        a_metadata = [a.prev_msg.metadata]  # PutRsp has a single VectorClock
 
         # Now partition the network: (b A B C) (D E F a)
         Framework.cut_wires((b, A, B, C), (D, E, F, a))
@@ -312,13 +312,13 @@ class SimpleTestCase(unittest.TestCase):
         # Subsequent Put from a
         a.put('K1', a_metadata, 11, destnode=coordinator)
         Framework.schedule(timers_to_process=2)
-        a_metadata = [a.last_msg.metadata]  # PutRsp has a single VectorClock
+        a_metadata = [a.prev_msg.metadata]  # PutRsp has a single VectorClock
 
         # Get-then-Put from b
         b.get('K1', destnode=coordinator)
-        while b.last_msg is None:  # Wait for rsp to arrive
+        while b.prev_msg is None:  # Wait for rsp to arrive
             Framework.schedule(timers_to_process=1)
-        getrsp = b.last_msg
+        getrsp = b.prev_msg
         b.put('K1', getrsp.metadata, 21, destnode=A)
         Framework.schedule(timers_to_process=3)
         return all_nodes
@@ -338,7 +338,7 @@ class SimpleTestCase(unittest.TestCase):
         Framework.schedule(timers_to_process=12)
 
         # Get from node a
-        a = Node.node['a']
+        a = BaseNode.node['a']
         a.get('K1')
         Framework.schedule(timers_to_process=0)
 
@@ -359,8 +359,8 @@ class SimpleTestCase(unittest.TestCase):
         from_line = len(History.history)
 
         # Put a new value, which coalesces
-        a = Node.node['a']
-        getrsp = a.last_msg
+        a = BaseNode.node['a']
+        getrsp = a.prev_msg
         a.put('K1', getrsp.metadata, 101)
         Framework.schedule(timers_to_process=0)
 
@@ -372,16 +372,16 @@ class SimpleTestCase(unittest.TestCase):
         self.partition()
         self.partition_repair()
         # Just output the final diverged metadata
-        a = Node.node['a']
-        getrsp = a.last_msg
+        a = BaseNode.node['a']
+        getrsp = a.prev_msg
         print("%s@[%s]" % (getrsp.value, ",".join([str(x) for x in getrsp.metadata])))
 
     def test_partition_restore_metadata(self):
         self.partition()
         self.partition_repair()
         # Put a new value, which coalesces
-        a = Node.node['a']
-        getrsp = a.last_msg
+        a = BaseNode.node['a']
+        getrsp = a.prev_msg
         putmsg = a.put('K1', getrsp.metadata, 101)
         Framework.schedule(timers_to_process=0)
         print(putmsg.metadata)

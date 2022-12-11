@@ -239,7 +239,7 @@ class History(object):
         contents = {}  # node -> list of contents
         longest_conts = 0
         for node in column.keys():
-            node_conts = node.get_contents()
+            node_conts = node.content_to_str()
             contents[node] = node_conts
             if len(node_conts) > longest_conts:
                 longest_conts = len(node_conts)

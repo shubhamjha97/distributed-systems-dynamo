@@ -5,7 +5,7 @@ from message import NodeAction
 _logger = logging.getLogger('dynamo')
 
 
-class Node(object):
+class BaseNode(object):
     """Node that can send and receive messages."""
     # Class-wide tracking of all Nodes
     count = 0
@@ -33,19 +33,19 @@ class Node(object):
 
     def __init__(self, name=None):
         if name is None:
-            self.name = Node.next_name()
+            self.name = BaseNode.next_name()
         else:
             self.name = name
         self.next_sequence_number = 0
         self.included = True  # Whether this node is included in lists of nodes
         self.failed = False  # Indicates current failure
         # Keep track of node object <-> node name
-        Node.node[self.name] = self
-        Node.name[self] = self.name
+        BaseNode.node[self.name] = self
+        BaseNode.name[self] = self.name
         _logger.debug("Create node %s", self)
         History.add('add', NodeAction(self))
 
-    def get_contents(self):
+    def content_to_str(self):
         return []
 
     def __str__(self):
@@ -80,7 +80,7 @@ class Node(object):
         self.next_sequence_number = self.next_sequence_number + 1
         return self.next_sequence_number
 
-    def rcvmsg(self, msg):
+    def process_msg(self, msg):
         """Subclasses need to implement rcvmsg to allow processing of messages"""
         raise NotImplemented
 

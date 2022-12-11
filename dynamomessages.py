@@ -36,9 +36,9 @@ class DynamoResponseMessage(ResponseMessage):
         return "%s(%s=%s)" % (self.__class__.__name__, self.key, _show_value(self.value, self.metadata))
 
 
-class ClientPut(DynamoRequestMessage):
+class ClientPutReq(DynamoRequestMessage):
     def __init__(self, from_node, to_node, key, value, metadata, msg_id=None):
-        super(ClientPut, self).__init__(from_node, to_node, key, msg_id=msg_id)
+        super(ClientPutReq, self).__init__(from_node, to_node, key, msg_id=msg_id)
         self.value = value
         self.metadata = metadata
 
@@ -70,9 +70,9 @@ class PutReq(DynamoRequestMessage):
                      ",".join([str(x) for x in self.handoff])))
 
 
-class PutRsp(DynamoResponseMessage):
+class PutResp(DynamoResponseMessage):
     def __init__(self, req):
-        super(PutRsp, self).__init__(req, req.value, req.metadata)
+        super(PutResp, self).__init__(req, req.value, req.metadata)
 
 
 class ClientGet(DynamoRequestMessage):

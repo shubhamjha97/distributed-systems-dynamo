@@ -3,7 +3,7 @@ import copy
 import logging
 from collections import deque
 
-from node import Node
+from basenode import BaseNode
 from history import History
 from timer import TimerManager
 from message import ResponseMessage
@@ -120,7 +120,7 @@ class Framework(object):
                         # cancel any timer associated with the original request
                         cls.remove_req_timer(reqmsg)
                     History.add("deliver", msg)
-                    msg.to_node.rcvmsg(msg)
+                    msg.to_node.process_msg(msg)
                 msgs_to_process = msgs_to_process - 1
                 if msgs_to_process == 0:
                     return
@@ -153,4 +153,4 @@ def reset():
 def reset_all():
     """Reset all message and other history, and remove all nodes"""
     reset()
-    Node.reset()
+    BaseNode.reset()
