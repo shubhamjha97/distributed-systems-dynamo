@@ -1,9 +1,8 @@
-#!/usr/bin/env python
-"""Vector clock class"""
 import copy
 
+from merkle import md5string
 
-# PART coreclass
+
 class VectorClock(object):
     def __init__(self):
         self.clock = {}  # node => counter
@@ -16,11 +15,14 @@ class VectorClock(object):
         self.clock[node] = counter
         return self  # allow chaining of .update() operations
 
+    def __hash__(self):  # TODO: check hashing
+        return md5string(list(self.clock))
+
     def __str__(self):
         return "{%s}" % ", ".join(["%s:%d" % (node, self.clock[node])
                                    for node in sorted(self.clock.keys())])
 
-# PART comparisons
+    # PART comparisons
     # Comparison operations. Vector clocks are partially ordered, but not totally ordered.
     def __eq__(self, other):
         return self.clock == other.clock
@@ -40,12 +42,12 @@ class VectorClock(object):
         return (self == other) or (self < other)
 
     def __gt__(self, other):
-        return (other < self)
+        return other < self
 
     def __ge__(self, other):
         return (self == other) or (self > other)
 
-# PART coalesce
+    # PART coalesce
     @classmethod
     def coalesce(cls, vcs):
         """Coalesce a container of VectorClock objects.
@@ -69,7 +71,7 @@ class VectorClock(object):
                 results.append(copy.deepcopy(vc))
         return results
 
-# PART coalesce2
+    # PART coalesce2
     @classmethod
     def coalesce2(cls, vcs):
         """Coalesce a container of (object, VectorClock) tuples.
@@ -96,7 +98,7 @@ class VectorClock(object):
                 results.append((obj, copy.deepcopy(vc)))
         return results
 
-# PART converge
+    # PART converge
     @classmethod
     def converge(cls, vcs):
         """Return a single VectorClock that subsumes all of the input VectorClocks"""
@@ -112,7 +114,7 @@ class VectorClock(object):
                     result.clock[node] = counter
         return result
 
-# -----------IGNOREBEYOND: test code ---------------
+
 import unittest
 
 

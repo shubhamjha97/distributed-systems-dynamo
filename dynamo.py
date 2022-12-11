@@ -226,7 +226,10 @@ class DynamoNode(Node):
     def rcv_getrsp(self, getrsp):
         seqno = getrsp.msg_id
         if seqno in self.pending_get_rsp:
-            self.pending_get_rsp[seqno].add((getrsp.from_node, getrsp.value, getrsp.metadata))
+            try:
+                self.pending_get_rsp[seqno].add((getrsp.from_node, getrsp.value, getrsp.metadata))
+            except:
+                pass
             if len(self.pending_get_rsp[seqno]) >= DynamoNode.R:
                 _logger.info("%s: read %d copies of %s=? so done", self, DynamoNode.R, getrsp.key)
                 _logger.debug("  copies at %s", [(node.name, value) for (node, value, _) in self.pending_get_rsp[seqno]])
@@ -287,7 +290,7 @@ class DynamoClientNode(Node):
             destnode = random.choice(DynamoNode.nodelist)
         # Input metadata is always a sequence, but we always need to insert a
         # single VectorClock object into the ClientPut message
-        if len(metadata) == 1 and metadata[0] is None:
+        if not metadata or (len(metadata) == 1 and metadata[0] is None):
             metadata = VectorClock()
         else:
             # A Put operation always implies convergence

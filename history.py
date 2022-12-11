@@ -115,7 +115,7 @@ class History(object):
             action, msg = cls.history[ii]
             lineno = lineno + 1
             # First, build up a line with the current set of vertical lines and leaders
-            this_line = [GLYPHS.BLANK for jj in xrange(linelen)]
+            this_line = [GLYPHS.BLANK for jj in range(linelen)]
             for node, nodecol in column.items():
                 if node in included_nodes:
                     if node in failed_nodes:
@@ -245,7 +245,7 @@ class History(object):
                 longest_conts = len(node_conts)
         # Now typeset it
         for ii in range(longest_conts):
-            this_line = [GLYPHS.BLANK for jj in xrange(linelen)]
+            this_line = [GLYPHS.BLANK for jj in range(linelen)]
             for node, nodecol in column.items():
                 if ii < len(contents[node]):
                     _write_center(this_line, nodecol, str(contents[node][ii]))
@@ -305,7 +305,7 @@ def _pick_column(vertlines, columns, from_col, to_col):
         xright = from_col
     best_col = -1
     best_distance = 0
-    for col in xrange(left, xright):
+    for col in range(left, xright):
         # Calculate the distance to the nearest excluded column
         insert_point = bisect(not_allowed_list, col)
         if insert_point > 0:  # look at not_allowed[insert_point - 1]
@@ -334,14 +334,14 @@ def _draw_horiz(line, from_col, from_char, to_col, to_char):
     else:
         left = to_col + 1
         xright = from_col
-    for jj in xrange(left, xright):
+    for jj in range(left, xright):
         line[jj] = GLYPHS.HORIZONTAL_LINE
 
 
 def _write_text(line, col, text):
-    # text may need to extend the array
+    col = int(col)
     extend_by = (col + len(text)) - len(line)
-    for ii in xrange(extend_by):
+    for ii in range(extend_by):
         line.append(GLYPHS.BLANK)
     for c in text:
         line[col] = c

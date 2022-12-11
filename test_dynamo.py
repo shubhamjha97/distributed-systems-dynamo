@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-"""Test code for Dynamo"""
 import sys
 import codecs
 import locale
@@ -17,11 +15,7 @@ import history
 import logconfig
 
 import dynamomessages
-import dynamo1
-import dynamo2
-import dynamo3
-import dynamo4
-import dynamo as dynamo99
+import dynamo
 
 logconfig.init_logging()
 _logger = logging.getLogger('dynamo')
@@ -32,11 +26,11 @@ class SimpleTestCase(unittest.TestCase):
     def setUp(self):
         _logger.info("Reset for next test")
         reset_all()
-        dynamo1.DynamoNode.reset()
-        dynamo2.DynamoNode.reset()
-        dynamo3.DynamoNode.reset()
-        dynamo4.DynamoNode.reset()
-        dynamo99.DynamoNode.reset()
+        dynamo.DynamoNode.reset()
+        dynamo.DynamoNode.reset()
+        dynamo.DynamoNode.reset()
+        dynamo.DynamoNode.reset()
+        dynamo.DynamoNode.reset()
 
     def tearDown(self):
         _logger.info("Reset after last test")
@@ -44,39 +38,39 @@ class SimpleTestCase(unittest.TestCase):
 
     def test_simple_put(self):
         for _ in range(6):
-            dynamo1.DynamoNode()
-        a = dynamo1.DynamoClientNode('a')
+            dynamo.DynamoNode()
+        a = dynamo.DynamoClientNode('a')
         a.put('K1', None, 1)
         Framework.schedule()
         print(History.ladder())
 
     def test_simple_get(self):
         for _ in range(6):
-            dynamo1.DynamoNode()
-        a = dynamo1.DynamoClientNode('a')
+            dynamo.DynamoNode()
+        a = dynamo.DynamoClientNode('a')
         a.put('K1', None, 1)
         Framework.schedule()
         from_line = len(History.history)
         a.get('K1')
         Framework.schedule()
-        print History.ladder(start_line=from_line)
+        print(History.ladder(start_line=from_line))
 
     def test_double_put(self):
         for _ in range(6):
-            dynamo1.DynamoNode()
-        a = dynamo1.DynamoClientNode('a')
-        b = dynamo1.DynamoClientNode('b')
+            dynamo.DynamoNode()
+        a = dynamo.DynamoClientNode('a')
+        b = dynamo.DynamoClientNode('b')
         a.put('K1', None, 1)
         Framework.schedule(1)
         b.put('K2', None, 17)
         Framework.schedule()
-        print History.ladder(spacing=14)
+        print(History.ladder(spacing=14))
 
     def test_put1_fail_initial_node(self):
-        self.put_fail_initial_node(dynamo1)
+        self.put_fail_initial_node(dynamo)
 
     def test_put2_fail_initial_node(self):
-        self.put_fail_initial_node(dynamo2)
+        self.put_fail_initial_node(dynamo)
 
     def put_fail_initial_node(self, cls):
         for _ in range(6):
@@ -87,31 +81,31 @@ class SimpleTestCase(unittest.TestCase):
         # Fail at the forwarding node before it gets a chance to forward
         destnode.fail()
         Framework.schedule()
-        print History.ladder()
+        print(History.ladder())
 
     def test_put1_fail_initial_node2(self):
-        self.put_fail_initial_node2(dynamo1)
+        self.put_fail_initial_node2(dynamo)
 
     def test_put2_fail_initial_node2(self):
-        self.put_fail_initial_node2(dynamo2)
+        self.put_fail_initial_node2(dynamo)
 
     def put_fail_initial_node2(self, cls):
         for _ in range(6):
-            dynamo1.DynamoNode()
-        a = dynamo1.DynamoClientNode('a')
-        destnode = random.choice(dynamo1.DynamoNode.nodelist)
+            dynamo.DynamoNode()
+        a = dynamo.DynamoClientNode('a')
+        destnode = random.choice(dynamo.DynamoNode.nodelist)
         a.put('K1', None, 1, destnode=destnode)
         # Fail at the forwarding node after it gets a chance to forward
         Framework.schedule(1)
         destnode.fail()
         Framework.schedule()
-        print History.ladder()
+        print(History.ladder())
 
     def test_put1_fail_node2(self):
-        self.put_fail_node2(dynamo1)
+        self.put_fail_node2(dynamo)
 
     def test_put2_fail_node2(self):
-        self.put_fail_node2(dynamo2)
+        self.put_fail_node2(dynamo)
 
     def put_fail_node2(self, cls):
         for _ in range(6):
@@ -125,16 +119,16 @@ class SimpleTestCase(unittest.TestCase):
         Framework.schedule()
         a.get('K1')
         Framework.schedule()
-        print History.ladder()
+        print(History.ladder())
 
     def test_put1_fail_nodes23(self):
-        self.put_fail_nodes23(dynamo1)
-        print History.ladder(spacing=16)
+        self.put_fail_nodes23(dynamo)
+        print(History.ladder(spacing=16))
 
     def test_put2_fail_nodes23(self):
-        (_, pref_list) = self.put_fail_nodes23(dynamo2)
+        (_, pref_list) = self.put_fail_nodes23(dynamo)
         # Force nodes that are of interest in put2_fail_nodes23_[234] to be included in the history
-        print History.ladder(force_include=pref_list, spacing=16)
+        print(History.ladder(force_include=pref_list, spacing=16))
 
     def put_fail_nodes23(self, cls):
         # Set up 6 nodes and 1 client node
@@ -152,26 +146,26 @@ class SimpleTestCase(unittest.TestCase):
 
     def test_put2_fail_nodes23_2(self):
         """Show second request for same key skipping failed nodes"""
-        (a, pref_list) = self.put_fail_nodes23(dynamo2)
+        (a, pref_list) = self.put_fail_nodes23(dynamo)
         coordinator = pref_list[0]
         from_line = len(History.history)
         a.put('K1', None, 2, destnode=coordinator)  # Send client request to coordinator for clarity
         Framework.schedule()
-        print History.ladder(force_include=pref_list, start_line=from_line, spacing=16)
+        print(History.ladder(force_include=pref_list, start_line=from_line, spacing=16))
 
     def test_put2_fail_nodes23_3(self):
         """Show PingReq failing"""
-        (a, pref_list) = self.put_fail_nodes23(dynamo4)
+        (a, pref_list) = self.put_fail_nodes23(dynamo)
         coordinator = pref_list[0]
         a.put('K1', None, 2, destnode=coordinator)  # Send client request to coordinator for clarity
         Framework.schedule(timers_to_process=0)
         from_line = len(History.history)
         Framework.schedule(timers_to_process=3)
-        print History.ladder(force_include=pref_list, start_line=from_line, spacing=16)
+        print(History.ladder(force_include=pref_list, start_line=from_line, spacing=16))
 
     def test_put2_fail_nodes23_4a(self):
         """Show PingReq recovering but an inconsistent Get being returned"""
-        (a, pref_list) = self.put_fail_nodes23(dynamo3)
+        (a, pref_list) = self.put_fail_nodes23(dynamo)
         coordinator = pref_list[0]
         a.put('K1', None, 2, destnode=coordinator)  # Send client request to coordinator for clarity
         Framework.schedule(timers_to_process=10)
@@ -181,11 +175,11 @@ class SimpleTestCase(unittest.TestCase):
         Framework.schedule(timers_to_process=10)
         a.get('K1', destnode=coordinator)
         Framework.schedule(timers_to_process=0)
-        print History.ladder(force_include=pref_list, start_line=from_line, spacing=16)
+        print(History.ladder(force_include=pref_list, start_line=from_line, spacing=16))
 
     def test_put2_fail_nodes23_4b(self):
         """Show PingReq recovering, and a subsequent Put returning to the original preference list"""
-        (a, pref_list) = self.put_fail_nodes23(dynamo3)
+        (a, pref_list) = self.put_fail_nodes23(dynamo)
         coordinator = pref_list[0]
         a.put('K1', None, 2, destnode=coordinator)  # Send client request to coordinator for clarity
         Framework.schedule(timers_to_process=10)
@@ -195,20 +189,20 @@ class SimpleTestCase(unittest.TestCase):
         Framework.schedule(timers_to_process=15)
         a.put('K1', None, 3, destnode=coordinator)
         Framework.schedule(timers_to_process=5)
-        print History.ladder(force_include=pref_list, start_line=from_line, spacing=16)
+        print(History.ladder(force_include=pref_list, start_line=from_line, spacing=16))
 
     def test_put2_fail_nodes23_5(self):
         """Show Put after a failure including handoff, and the resulting Pings"""
-        (a, pref_list) = self.put_fail_nodes23(dynamo4)
+        (a, pref_list) = self.put_fail_nodes23(dynamo)
         coordinator = pref_list[0]
         from_line = len(History.history)
         a.put('K1', None, 2, destnode=coordinator)  # Send client request to coordinator for clarity
         Framework.schedule(timers_to_process=10)
-        print History.ladder(force_include=pref_list, start_line=from_line, spacing=16)
+        print(History.ladder(force_include=pref_list, start_line=from_line, spacing=16))
 
     def test_put2_fail_nodes23_6(self):
         """Show hinted handoff after recovery"""
-        (a, pref_list) = self.put_fail_nodes23(dynamo4)
+        (a, pref_list) = self.put_fail_nodes23(dynamo)
         coordinator = pref_list[0]
         a.put('K1', None, 2, destnode=coordinator)  # Send client request to coordinator for clarity
         Framework.schedule(timers_to_process=10)
@@ -216,10 +210,10 @@ class SimpleTestCase(unittest.TestCase):
         pref_list[1].recover()
         pref_list[2].recover()
         Framework.schedule(timers_to_process=15)
-        print History.ladder(force_include=pref_list, start_line=from_line, spacing=16)
+        print(History.ladder(force_include=pref_list, start_line=from_line, spacing=16))
 
     def get_put_get_put(self):
-        cls = dynamo99
+        cls = dynamo
         for _ in range(6):
             cls.DynamoNode()
         a = cls.DynamoClientNode('a')
@@ -243,7 +237,7 @@ class SimpleTestCase(unittest.TestCase):
         """Show 2 x get-then-put operation"""
         dynamomessages._show_metadata = True
         (a, pref_list) = self.get_put_get_put()
-        print History.ladder(force_include=pref_list, spacing=16)
+        print(History.ladder(force_include=pref_list, spacing=16))
         dynamomessages._show_metadata = False
 
     def get_put_put(self, a, coordinator):
@@ -265,7 +259,7 @@ class SimpleTestCase(unittest.TestCase):
         coordinator = pref_list[0]
         from_line = len(History.history)
         self.get_put_put(a, coordinator)
-        print History.ladder(force_include=pref_list, start_line=from_line, spacing=16)
+        print(History.ladder(force_include=pref_list, start_line=from_line, spacing=16))
         dynamomessages._show_metadata = False
 
     def test_metadata_simple_fail(self):
@@ -284,13 +278,13 @@ class SimpleTestCase(unittest.TestCase):
         # Send in a get
         a.get('K1', destnode=pref_list[1])
         Framework.schedule(timers_to_process=0)
-        print History.ladder(force_include=pref_list, start_line=from_line, spacing=16)
+        print(History.ladder(force_include=pref_list, start_line=from_line, spacing=16))
         dynamomessages._show_metadata = False
 
     def partition(self):
         """Show a network partition"""
         dynamomessages._show_metadata = True
-        cls = dynamo99
+        cls = dynamo
         A = cls.DynamoNode()
         B = cls.DynamoNode()
         C = cls.DynamoNode()
@@ -299,7 +293,7 @@ class SimpleTestCase(unittest.TestCase):
         F = cls.DynamoNode()
         a = cls.DynamoClientNode('a')
         b = cls.DynamoClientNode('b')
-        all_nodes = set((A, B, C, D, E, F, a, b))
+        all_nodes = {A, B, C, D, E, F, a, b}
         pref_list = cls.DynamoNode.chash.find_nodes('K1', 5)[0]
         coordinator = pref_list[0]
         # Set in a get-then-put
@@ -334,7 +328,7 @@ class SimpleTestCase(unittest.TestCase):
         all_nodes = self.partition()
 
         # Display, tweaking ordering of nodes so partition is in the middle
-        print History.ladder(force_include=all_nodes, spacing=16, key=lambda x: ' ' if x.name == 'b' else x.name)
+        print(History.ladder(force_include=all_nodes, spacing=16, key=lambda x: ' ' if x.name == 'b' else x.name))
         dynamomessages._show_metadata = False
 
     def partition_repair(self):
@@ -355,7 +349,7 @@ class SimpleTestCase(unittest.TestCase):
         self.partition_repair()
 
         # Display, tweaking ordering of nodes so partition is in the middle
-        print History.ladder(force_include=all_nodes, start_line=from_line, spacing=16, key=lambda x: ' ' if x.name == 'b' else x.name)
+        print(History.ladder(force_include=all_nodes, start_line=from_line, spacing=16, key=lambda x: ' ' if x.name == 'b' else x.name))
         dynamomessages._show_metadata = False
 
     def test_partition_restore(self):
@@ -371,7 +365,7 @@ class SimpleTestCase(unittest.TestCase):
         Framework.schedule(timers_to_process=0)
 
         # Display, tweaking ordering of nodes so partition is in the middle
-        print History.ladder(force_include=all_nodes, start_line=from_line, spacing=16, key=lambda x: ' ' if x.name == 'b' else x.name)
+        print(History.ladder(force_include=all_nodes, start_line=from_line, spacing=16, key=lambda x: ' ' if x.name == 'b' else x.name))
         dynamomessages._show_metadata = False
 
     def test_partition_detect_metadata(self):
@@ -380,7 +374,7 @@ class SimpleTestCase(unittest.TestCase):
         # Just output the final diverged metadata
         a = Node.node['a']
         getrsp = a.last_msg
-        print "%s@[%s]" % (getrsp.value, ",".join([str(x) for x in getrsp.metadata]))
+        print("%s@[%s]" % (getrsp.value, ",".join([str(x) for x in getrsp.metadata])))
 
     def test_partition_restore_metadata(self):
         self.partition()
@@ -390,7 +384,7 @@ class SimpleTestCase(unittest.TestCase):
         getrsp = a.last_msg
         putmsg = a.put('K1', getrsp.metadata, 101)
         Framework.schedule(timers_to_process=0)
-        print putmsg.metadata
+        print(putmsg.metadata)
 
 
 if __name__ == "__main__":

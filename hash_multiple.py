@@ -11,9 +11,9 @@ class ConsistentHashTable(object):
         # Insert each node into the hash circle multiple times
         baselist = []
         for node in nodelist:
-            for ii in xrange(repeat):
+            for ii in range(repeat):
                 nodestring = "%s:%d" % (node, ii)
-                baselist.append((hashlib.md5(nodestring).digest(), node))
+                baselist.append((hashlib.md5(nodestring.encode("utf-8")).digest(), node))
         # Build two lists: one of (hashvalue, node) pairs, sorted by
         # hashvalue, one of just the hashvalues, to allow use of bisect.
         self.nodelist = sorted(baselist, key=lambda x: x[0])
@@ -29,7 +29,7 @@ class ConsistentHashTable(object):
         if avoid is None:  # Use an empty set
             avoid = set()
         # Hash the key to find where it belongs on the ring
-        hv = hashlib.md5(str(key)).digest()
+        hv = hashlib.md5(str(key).encode("utf-8")).digest()
         # Find the node after this hash value around the ring, as an index
         # into self.hashlist/self.nodelist
         initial_index = bisect.bisect(self.hashlist, hv)
