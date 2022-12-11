@@ -226,10 +226,7 @@ class DynamoNode(Node):
     def rcv_getrsp(self, getrsp):
         seqno = getrsp.msg_id
         if seqno in self.pending_get_rsp:
-            try:
-                self.pending_get_rsp[seqno].add((getrsp.from_node, getrsp.value, getrsp.metadata))
-            except:
-                pass
+            self.pending_get_rsp[seqno].add((getrsp.from_node, getrsp.value, getrsp.metadata))
             if len(self.pending_get_rsp[seqno]) >= DynamoNode.R:
                 _logger.info("%s: read %d copies of %s=? so done", self, DynamoNode.R, getrsp.key)
                 _logger.debug("  copies at %s", [(node.name, value) for (node, value, _) in self.pending_get_rsp[seqno]])

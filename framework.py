@@ -62,7 +62,8 @@ class Framework(object):
         """Cancel all pending-request timers destined for the given node.
         Returns a list of the request messages whose timers have been cancelled."""
         failed_requests = []
-        for reqmsg in cls.pending_timers.keys():
+        pending_timers_keys = list(cls.pending_timers.keys())
+        for reqmsg in pending_timers_keys:
             if reqmsg.to_node == destnode:
                 TimerManager.cancel_timer(cls.pending_timers[reqmsg])
                 del cls.pending_timers[reqmsg]

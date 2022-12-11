@@ -1,6 +1,6 @@
 import copy
 
-from merkle import md5string
+from merkle import keyhash
 
 
 class VectorClock(object):
@@ -16,7 +16,7 @@ class VectorClock(object):
         return self  # allow chaining of .update() operations
 
     def __hash__(self):  # TODO: check hashing
-        return md5string(list(self.clock))
+        return keyhash(list(self.clock))
 
     def __str__(self):
         return "{%s}" % ", ".join(["%s:%d" % (node, self.clock[node])
