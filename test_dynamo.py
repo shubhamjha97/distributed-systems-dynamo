@@ -6,9 +6,9 @@ import unittest
 import logging
 
 # Wrap sys.stdout into a StreamWriter to allow writing unicode.
-sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
+# sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
 
-from framework import Framework, reset_all
+from emulation import Emulation, reset_all
 from basenode import BaseNode
 from history import History
 import history
@@ -19,7 +19,6 @@ import dynamo
 
 logconfig.init_logging()
 _logger = logging.getLogger('dynamo')
-
 
 class SimpleTestCase(unittest.TestCase):
     """Test simple Dynamo function"""
@@ -41,7 +40,7 @@ class SimpleTestCase(unittest.TestCase):
             dynamo.Node()
         a = dynamo.Client('a')
         a.put('K1', None, 1)
-        Framework.schedule()
+        Emulation.schedule()
         print(History.ladder())
 
     def test_simple_get(self):
@@ -49,10 +48,10 @@ class SimpleTestCase(unittest.TestCase):
             dynamo.Node()
         a = dynamo.Client('a')
         a.put('K1', None, 1)
-        Framework.schedule()
+        Emulation.schedule()
         from_line = len(History.history)
         a.get('K1')
-        Framework.schedule()
+        Emulation.schedule()
         print(History.ladder(start_line=from_line))
 
     def test_double_put(self):
@@ -61,9 +60,9 @@ class SimpleTestCase(unittest.TestCase):
         a = dynamo.Client('a')
         b = dynamo.Client('b')
         a.put('K1', None, 1)
-        Framework.schedule(1)
+        Emulation.schedule(1)
         b.put('K2', None, 17)
-        Framework.schedule()
+        Emulation.schedule()
         print(History.ladder(spacing=14))
 
     def test_put1_fail_initial_node(self):
@@ -76,11 +75,11 @@ class SimpleTestCase(unittest.TestCase):
         for _ in range(6):
             cls.Node()
         a = cls.Client('a')
-        destnode = random.choice(cls.Node.nodelist)
+        destnode = random.choice(cls.Node.node_list)
         a.put('K1', None, 1, destnode=destnode)
         # Fail at the forwarding node before it gets a chance to forward
         destnode.fail()
-        Framework.schedule()
+        Emulation.schedule()
         print(History.ladder())
 
     def test_put1_fail_initial_node2(self):
@@ -93,12 +92,12 @@ class SimpleTestCase(unittest.TestCase):
         for _ in range(6):
             dynamo.Node()
         a = dynamo.Client('a')
-        destnode = random.choice(dynamo.Node.nodelist)
+        destnode = random.choice(dynamo.Node.node_list)
         a.put('K1', None, 1, destnode=destnode)
         # Fail at the forwarding node after it gets a chance to forward
-        Framework.schedule(1)
+        Emulation.schedule(1)
         destnode.fail()
-        Framework.schedule()
+        Emulation.schedule()
         print(History.ladder())
 
     def test_put1_fail_node2(self):
@@ -114,11 +113,11 @@ class SimpleTestCase(unittest.TestCase):
         a.put('K1', None, 1)
         # Fail the second node in the preference list
         pref_list = cls.Node.consistent_hash_tbl.find_nodes('K1', 3)[0]
-        Framework.schedule(1)
+        Emulation.schedule(1)
         pref_list[1].fail()
-        Framework.schedule()
+        Emulation.schedule()
         a.get('K1')
-        Framework.schedule()
+        Emulation.schedule()
         print(History.ladder())
 
     def test_put1_fail_nodes23(self):
@@ -138,10 +137,10 @@ class SimpleTestCase(unittest.TestCase):
         # Fail the second and third node in the preference list
         pref_list = cls.Node.consistent_hash_tbl.find_nodes('K1', 5)[0]
         a.put('K1', None, 1, destnode=pref_list[0])
-        Framework.schedule(1)
+        Emulation.schedule(1)
         pref_list[1].fail()
         pref_list[2].fail()
-        Framework.schedule(timers_to_process=2)
+        Emulation.schedule(timers_to_process=2)
         return a, pref_list
 
     def test_put2_fail_nodes23_2(self):
@@ -150,7 +149,7 @@ class SimpleTestCase(unittest.TestCase):
         coordinator = pref_list[0]
         from_line = len(History.history)
         a.put('K1', None, 2, destnode=coordinator)  # Send client request to coordinator for clarity
-        Framework.schedule()
+        Emulation.schedule()
         print(History.ladder(force_include=pref_list, start_line=from_line, spacing=16))
 
     def test_put2_fail_nodes23_3(self):
@@ -158,9 +157,9 @@ class SimpleTestCase(unittest.TestCase):
         (a, pref_list) = self.put_fail_nodes23(dynamo)
         coordinator = pref_list[0]
         a.put('K1', None, 2, destnode=coordinator)  # Send client request to coordinator for clarity
-        Framework.schedule(timers_to_process=0)
+        Emulation.schedule(timers_to_process=0)
         from_line = len(History.history)
-        Framework.schedule(timers_to_process=3)
+        Emulation.schedule(timers_to_process=3)
         print(History.ladder(force_include=pref_list, start_line=from_line, spacing=16))
 
     def test_put2_fail_nodes23_4a(self):
@@ -168,13 +167,13 @@ class SimpleTestCase(unittest.TestCase):
         (a, pref_list) = self.put_fail_nodes23(dynamo)
         coordinator = pref_list[0]
         a.put('K1', None, 2, destnode=coordinator)  # Send client request to coordinator for clarity
-        Framework.schedule(timers_to_process=10)
+        Emulation.schedule(timers_to_process=10)
         from_line = len(History.history)
         pref_list[1].recover()
         pref_list[2].recover()
-        Framework.schedule(timers_to_process=10)
+        Emulation.schedule(timers_to_process=10)
         a.get('K1', destnode=coordinator)
-        Framework.schedule(timers_to_process=0)
+        Emulation.schedule(timers_to_process=0)
         print(History.ladder(force_include=pref_list, start_line=from_line, spacing=16))
 
     def test_put2_fail_nodes23_4b(self):
@@ -182,13 +181,13 @@ class SimpleTestCase(unittest.TestCase):
         (a, pref_list) = self.put_fail_nodes23(dynamo)
         coordinator = pref_list[0]
         a.put('K1', None, 2, destnode=coordinator)  # Send client request to coordinator for clarity
-        Framework.schedule(timers_to_process=10)
+        Emulation.schedule(timers_to_process=10)
         from_line = len(History.history)
         pref_list[1].recover()
         pref_list[2].recover()
-        Framework.schedule(timers_to_process=15)
+        Emulation.schedule(timers_to_process=15)
         a.put('K1', None, 3, destnode=coordinator)
-        Framework.schedule(timers_to_process=5)
+        Emulation.schedule(timers_to_process=5)
         print(History.ladder(force_include=pref_list, start_line=from_line, spacing=16))
 
     def test_put2_fail_nodes23_5(self):
@@ -197,7 +196,7 @@ class SimpleTestCase(unittest.TestCase):
         coordinator = pref_list[0]
         from_line = len(History.history)
         a.put('K1', None, 2, destnode=coordinator)  # Send client request to coordinator for clarity
-        Framework.schedule(timers_to_process=10)
+        Emulation.schedule(timers_to_process=10)
         print(History.ladder(force_include=pref_list, start_line=from_line, spacing=16))
 
     def test_put2_fail_nodes23_6(self):
@@ -205,11 +204,11 @@ class SimpleTestCase(unittest.TestCase):
         (a, pref_list) = self.put_fail_nodes23(dynamo)
         coordinator = pref_list[0]
         a.put('K1', None, 2, destnode=coordinator)  # Send client request to coordinator for clarity
-        Framework.schedule(timers_to_process=10)
+        Emulation.schedule(timers_to_process=10)
         from_line = len(History.history)
         pref_list[1].recover()
         pref_list[2].recover()
-        Framework.schedule(timers_to_process=15)
+        Emulation.schedule(timers_to_process=15)
         print(History.ladder(force_include=pref_list, start_line=from_line, spacing=16))
 
     def get_put_get_put(self):
@@ -221,16 +220,16 @@ class SimpleTestCase(unittest.TestCase):
         coordinator = pref_list[0]
         # Send in first get-then-put
         a.get('K1', destnode=coordinator)
-        Framework.schedule(timers_to_process=0)
+        Emulation.schedule(timers_to_process=0)
         getrsp = a.prev_msg
         a.put('K1', getrsp.metadata, 1, destnode=coordinator)
-        Framework.schedule(timers_to_process=0)
+        Emulation.schedule(timers_to_process=0)
         # Send in second get-then-put
         a.get('K1', destnode=coordinator)
-        Framework.schedule(timers_to_process=0)
+        Emulation.schedule(timers_to_process=0)
         getrsp = a.prev_msg
         a.put('K1', getrsp.metadata, 2, destnode=coordinator)
-        Framework.schedule(timers_to_process=0)
+        Emulation.schedule(timers_to_process=0)
         return (a, pref_list)
 
     def test_get_put_get_put(self):
@@ -244,13 +243,13 @@ class SimpleTestCase(unittest.TestCase):
         # Assume .get_put_get_put() has happened already.
         # Send in a get-then-put-put.
         a.get('K1', destnode=coordinator)
-        Framework.schedule(timers_to_process=0)
+        Emulation.schedule(timers_to_process=0)
         getrsp = a.prev_msg
         a.put('K1', getrsp.metadata, 3, destnode=coordinator)
-        Framework.schedule(timers_to_process=0)
+        Emulation.schedule(timers_to_process=0)
         metadata = [a.prev_msg.metadata]  # PutRsp has a single VectorClock
         a.put('K1', metadata, 4, destnode=coordinator)
-        Framework.schedule(timers_to_process=0)
+        Emulation.schedule(timers_to_process=0)
 
     def test_get_put_put(self):
         """Show get-then-put-then-put operation"""
@@ -274,10 +273,10 @@ class SimpleTestCase(unittest.TestCase):
         coordinator.fail()
         # Send in another put
         a.put('K1', metadata, 11, destnode=pref_list[1])
-        Framework.schedule(timers_to_process=0)
+        Emulation.schedule(timers_to_process=0)
         # Send in a get
         a.get('K1', destnode=pref_list[1])
-        Framework.schedule(timers_to_process=0)
+        Emulation.schedule(timers_to_process=0)
         print(History.ladder(force_include=pref_list, start_line=from_line, spacing=16))
         dynamomessages._show_metadata = False
 
@@ -299,28 +298,28 @@ class SimpleTestCase(unittest.TestCase):
         # Set in a get-then-put
         # Send in first get-then-put
         a.get('K1', destnode=coordinator)
-        Framework.schedule(timers_to_process=0)
+        Emulation.schedule(timers_to_process=0)
         getrsp = a.prev_msg
         a.put('K1', getrsp.metadata, 1, destnode=coordinator)
-        Framework.schedule(timers_to_process=0)
+        Emulation.schedule(timers_to_process=0)
         a_metadata = [a.prev_msg.metadata]  # PutRsp has a single VectorClock
 
         # Now partition the network: (b A B C) (D E F a)
-        Framework.cut_wires((b, A, B, C), (D, E, F, a))
-        Framework.cut_wires((D, E, F, a), (b, A, B, C))
+        Emulation.cut_wires((b, A, B, C), (D, E, F, a))
+        Emulation.cut_wires((D, E, F, a), (b, A, B, C))
 
         # Subsequent Put from a
         a.put('K1', a_metadata, 11, destnode=coordinator)
-        Framework.schedule(timers_to_process=2)
+        Emulation.schedule(timers_to_process=2)
         a_metadata = [a.prev_msg.metadata]  # PutRsp has a single VectorClock
 
         # Get-then-Put from b
         b.get('K1', destnode=coordinator)
         while b.prev_msg is None:  # Wait for rsp to arrive
-            Framework.schedule(timers_to_process=1)
+            Emulation.schedule(timers_to_process=1)
         getrsp = b.prev_msg
         b.put('K1', getrsp.metadata, 21, destnode=A)
-        Framework.schedule(timers_to_process=3)
+        Emulation.schedule(timers_to_process=3)
         return all_nodes
 
     def test_partition(self):
@@ -334,13 +333,13 @@ class SimpleTestCase(unittest.TestCase):
     def partition_repair(self):
         # Repair the partition
         History.add("announce", "Repair network partition")
-        Framework.cuts = []
-        Framework.schedule(timers_to_process=12)
+        Emulation.cuts = []
+        Emulation.schedule(timers_to_process=12)
 
         # Get from node a
         a = BaseNode.node['a']
         a.get('K1')
-        Framework.schedule(timers_to_process=0)
+        Emulation.schedule(timers_to_process=0)
 
     def test_partition_detect(self):
         dynamomessages._show_metadata = True
@@ -362,7 +361,7 @@ class SimpleTestCase(unittest.TestCase):
         a = BaseNode.node['a']
         getrsp = a.prev_msg
         a.put('K1', getrsp.metadata, 101)
-        Framework.schedule(timers_to_process=0)
+        Emulation.schedule(timers_to_process=0)
 
         # Display, tweaking ordering of nodes so partition is in the middle
         print(History.ladder(force_include=all_nodes, start_line=from_line, spacing=16, key=lambda x: ' ' if x.name == 'b' else x.name))
@@ -383,7 +382,7 @@ class SimpleTestCase(unittest.TestCase):
         a = BaseNode.node['a']
         getrsp = a.prev_msg
         putmsg = a.put('K1', getrsp.metadata, 101)
-        Framework.schedule(timers_to_process=0)
+        Emulation.schedule(timers_to_process=0)
         print(putmsg.metadata)
 
 

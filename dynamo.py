@@ -1,6 +1,3 @@
-"""Implementation of Dynamo
-
-Final iteration: add use of vector clocks for metadata"""
 import copy
 import random
 import logging
@@ -8,7 +5,7 @@ import logging
 import logconfig
 from basenode import BaseNode
 from timer import TimerManager
-from framework import Framework
+from emulation import Emulation
 from hash_multiple import ConsistentHashTable
 from dynamomessages import ClientPutReq, ClientGet, ClientPutRsp, ClientGetRsp
 from dynamomessages import PutReq, GetReq, PutResp, GetRsp
@@ -27,8 +24,8 @@ class Node(BaseNode):
     N = 3  # Number of nodes to replicate at
     W = 2  # Number of nodes that need to reply to a write operation
     R = 2  # Number of nodes that need to reply to a read operation
-    nodelist = []
-    consistent_hash_tbl = ConsistentHashTable(nodelist, T)
+    node_list = []
+    consistent_hash_tbl = ConsistentHashTable(node_list, T)
 
     def __init__(self):
         super(Node, self).__init__()
@@ -43,8 +40,8 @@ class Node(BaseNode):
         self.failed_nodes = []
         self.pending_handoffs = {}
 
-        Node.nodelist.append(self)
-        Node.consistent_hash_tbl = ConsistentHashTable(Node.nodelist, Node.T)
+        Node.node_list.append(self)
+        Node.consistent_hash_tbl = ConsistentHashTable(Node.node_list, Node.T)
 
         self.retry_failed_node("retry")
 
@@ -59,19 +56,19 @@ class Node(BaseNode):
 
     @classmethod
     def reset(cls):
-        cls.nodelist = []
-        cls.consistent_hash_tbl = ConsistentHashTable(cls.nodelist, cls.T)
+        cls.node_list = []
+        cls.consistent_hash_tbl = ConsistentHashTable(cls.node_list, cls.T)
 
     def retry_failed_node(self, _):
         if self.failed_nodes:
             node = self.failed_nodes.pop(0)
             pingmsg = PingReq(self, node)
-            Framework.send_message(pingmsg)
+            Emulation.send_message(pingmsg)
         TimerManager.start_timer(self, reason="retry", priority=15, callback=self.retry_failed_node)
 
     def process_PingReq(self, pingmsg):
         pingrsp = PingRsp(pingmsg)
-        Framework.send_message(pingrsp)
+        Emulation.send_message(pingrsp)
 
     def process_PingResp(self, pingmsg):
         recovered_node = pingmsg.from_node
@@ -81,13 +78,13 @@ class Node(BaseNode):
             for key in self.pending_handoffs[recovered_node]:
                 (value, metadata) = self.get(key)
                 putmsg = PutReq(self, recovered_node, key, value, metadata)
-                Framework.send_message(putmsg)
+                Emulation.send_message(putmsg)
             del self.pending_handoffs[recovered_node]
 
     def rsp_timer_pop(self, reqmsg):
         _logger.info("Node %s now treating node %s as failed", self, reqmsg.to_node)
         self.failed_nodes.append(reqmsg.to_node)
-        failed_requests = Framework.cancel_timers_to(reqmsg.to_node)
+        failed_requests = Emulation.cancel_timers_to(reqmsg.to_node)
         failed_requests.append(reqmsg)
         for failedmsg in failed_requests:
             self.retry_request(failedmsg)
@@ -105,7 +102,7 @@ class Node(BaseNode):
                     newreqmsg = copy.copy(reqmsg)
                     newreqmsg.to_node = node
                     self.pending_req[kls][reqmsg.msg_id].add(newreqmsg)
-                    Framework.send_message(newreqmsg)
+                    Emulation.send_message(newreqmsg)
 
     def process_ClientPutReq(self, msg):
         preference_list, avoided = Node.consistent_hash_tbl.find_nodes(msg.key, Node.N, self.failed_nodes)
@@ -114,7 +111,7 @@ class Node(BaseNode):
         if self not in preference_list:
             _logger.info("put(%s=%s) maps to %s", msg.key, msg.value, preference_list)
             coordinator = preference_list[0]
-            Framework.forward_message(msg, coordinator)
+            Emulation.forward_message(msg, coordinator)
         else:
             seqno = self.generate_sequence_number()
             _logger.info("%s, %d: put %s=%s", self, seqno, msg.key, msg.value)
@@ -131,7 +128,7 @@ class Node(BaseNode):
                     handoff = None
                 putmsg = PutReq(self, node, msg.key, msg.value, metadata, msg_id=seqno, handoff=handoff)
                 self.pending_req[PutReq][seqno].add(putmsg)
-                Framework.send_message(putmsg)
+                Emulation.send_message(putmsg)
                 reqcount = reqcount + 1
                 if reqcount >= Node.N:
                     break
@@ -141,7 +138,7 @@ class Node(BaseNode):
         if self not in preference_list:
             _logger.info("get(%s=?) maps to %s", msg.key, preference_list)
             coordinator = preference_list[0]
-            Framework.forward_message(msg, coordinator)
+            Emulation.forward_message(msg, coordinator)
         else:
             seqno = self.generate_sequence_number()
             self.pending_req[GetReq][seqno] = set()
@@ -151,7 +148,7 @@ class Node(BaseNode):
             for node in preference_list:
                 getmsg = GetReq(self, node, msg.key, msg_id=seqno)
                 self.pending_req[GetReq][seqno].add(getmsg)
-                Framework.send_message(getmsg)
+                Emulation.send_message(getmsg)
                 reqcount = reqcount + 1
                 if reqcount >= Node.N:
                     break
@@ -166,7 +163,7 @@ class Node(BaseNode):
                     self.pending_handoffs[failed_node] = set()
                 self.pending_handoffs[failed_node].add(putmsg.key)
         putrsp = PutResp(putmsg)
-        Framework.send_message(putrsp)
+        Emulation.send_message(putrsp)
 
     def process_PutResp(self, putrsp):
         seqno = putrsp.msg_id
@@ -180,7 +177,7 @@ class Node(BaseNode):
                 del self.pending_put_rsp[seqno]
                 del self.pending_put_msg[seqno]
                 client_putrsp = ClientPutRsp(original_msg, putrsp.metadata)
-                Framework.send_message(client_putrsp)
+                Emulation.send_message(client_putrsp)
         else:
             pass
 
@@ -188,7 +185,7 @@ class Node(BaseNode):
         _logger.info("%s: retrieve %s=?", self, getmsg.key)
         (value, metadata) = self.get(getmsg.key)
         getrsp = GetRsp(getmsg, value, metadata)
-        Framework.send_message(getrsp)
+        Emulation.send_message(getrsp)
 
     def process_GetResp(self, getrsp):
         seqno = getrsp.msg_id
@@ -208,7 +205,7 @@ class Node(BaseNode):
                 client_getrsp = ClientGetRsp(original_msg,
                                              [value for (value, metadata) in results],
                                              [metadata for (value, metadata) in results])
-                Framework.send_message(client_getrsp)
+                Emulation.send_message(client_getrsp)
         else:
             pass
 
@@ -248,21 +245,21 @@ class Client(BaseNode):
 
     def put(self, key, metadata, value, destnode=None):
         if destnode is None:
-            destnode = random.choice(Node.nodelist)
+            destnode = random.choice(Node.node_list)
 
         if not metadata or (len(metadata) == 1 and metadata[0] is None):
             metadata = VectorClock()
         else:
             metadata = VectorClock.converge(metadata)
         putmsg = ClientPutReq(self, destnode, key, value, metadata)
-        Framework.send_message(putmsg)
+        Emulation.send_message(putmsg)
         return putmsg
 
     def get(self, key, destnode=None):
         if destnode is None:
-            destnode = random.choice(Node.nodelist)
+            destnode = random.choice(Node.node_list)
         getmsg = ClientGet(self, destnode, key)
-        Framework.send_message(getmsg)
+        Emulation.send_message(getmsg)
         return getmsg
 
     def rsp_timer_pop(self, reqmsg):

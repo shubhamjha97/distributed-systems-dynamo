@@ -1,4 +1,3 @@
-"""Framework code for simulating networks"""
 import copy
 import logging
 from collections import deque
@@ -13,7 +12,7 @@ logconfig.init_logging()
 _logger = logging.getLogger('dynamo')
 
 
-class Framework(object):
+class Emulation(object):
     cuts = []  # List of incommunicado sets of nodes
     queue = deque([])  # queue of pending messages
     pending_timers = {}  # request_message => timer
@@ -48,7 +47,7 @@ class Framework(object):
             not isinstance(msg, ResponseMessage) and
             'rsp_timer_pop' in msg.from_node.__class__.__dict__ and
             callable(msg.from_node.__class__.__dict__['rsp_timer_pop'])):
-            cls.pending_timers[msg] = TimerManager.start_timer(msg.from_node, reason=msg, callback=Framework.rsp_timer_pop)
+            cls.pending_timers[msg] = TimerManager.start_timer(msg.from_node, reason=msg, callback=Emulation.rsp_timer_pop)
 
     @classmethod
     def remove_req_timer(cls, reqmsg):
@@ -106,7 +105,7 @@ class Framework(object):
                 if msg.to_node.failed:
                     _logger.info("Drop %s->%s: %s as destination down", msg.from_node, msg.to_node, msg)
                     History.add("drop", msg)
-                elif not Framework.reachable(msg.from_node, msg.to_node):
+                elif not Emulation.reachable(msg.from_node, msg.to_node):
                     _logger.info("Drop %s->%s: %s as route down", msg.from_node, msg.to_node, msg)
                     History.add("cut", msg)
                 else:
@@ -145,7 +144,7 @@ class Framework(object):
 
 def reset():
     """Reset all message and other history"""
-    Framework.reset()
+    Emulation.reset()
     TimerManager.reset()
     History.reset()
 
