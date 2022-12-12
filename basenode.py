@@ -1,13 +1,13 @@
-"""Python code implementing a Node in an arbitrary network"""
 import logging
 from history import History
-from message import NodeAction
+from messages import InternalNodeMessage
+
+
 _logger = logging.getLogger('dynamo')
 
 
 class BaseNode(object):
-    """Node that can send and receive messages."""
-    # Class-wide tracking of all Nodes
+    """Base class for a Dynamo node."""
     count = 0
     node = {}  # name  -> Node
     name = {}  # Node -> name
@@ -43,7 +43,7 @@ class BaseNode(object):
         BaseNode.node[self.name] = self
         BaseNode.name[self] = self.name
         _logger.debug("Create node %s", self)
-        History.add('add', NodeAction(self))
+        History.add('add', InternalNodeMessage(self))
 
     def content_to_str(self):
         return []
@@ -55,25 +55,25 @@ class BaseNode(object):
         """Mark this Node as currently failed; all messages to it will be dropped"""
         self.failed = True
         _logger.debug("Node %s fails", self)
-        History.add('fail', NodeAction(self))
+        History.add('fail', InternalNodeMessage(self))
 
     def recover(self):
         """Mark this Node as not failed"""
         self.failed = False
         _logger.debug("Node %s recovers", self)
-        History.add('recover', NodeAction(self))
+        History.add('recover', InternalNodeMessage(self))
 
     def remove(self):
         """Remove this Node from the system-wide lists of Nodes"""
         self.included = False
         _logger.debug("Node %s removed from system", self)
-        History.add('remove', NodeAction(self))
+        History.add('remove', InternalNodeMessage(self))
 
     def restore(self):
         """Restore this Node to the system-wide lists of Nodes"""
         self.included = True
         _logger.debug("Node %s restored to system", self)
-        History.add('add', NodeAction(self))
+        History.add('add', InternalNodeMessage(self))
 
     def generate_sequence_number(self):
         """Generate next sequence number for this Node"""
@@ -81,9 +81,7 @@ class BaseNode(object):
         return self.next_sequence_number
 
     def process_msg(self, msg):
-        """Subclasses need to implement rcvmsg to allow processing of messages"""
         raise NotImplemented
 
     def timer_pop(self, reason=None):
-        """Subclasses need to implement rcvmsg to allow processing of timer pops"""
         raise NotImplemented

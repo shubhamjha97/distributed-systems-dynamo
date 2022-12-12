@@ -7,10 +7,8 @@ from basenode import BaseNode
 from timer import TimerManager
 from emulation import Emulation
 from hash_multiple import ConsistentHashTable
-from dynamomessages import ClientPutReq, ClientGet, ClientPutRsp, ClientGetRsp
-from dynamomessages import PutReq, GetReq, PutResp, GetRsp
-from dynamomessages import DynamoRequestMessage
-from dynamomessages import PingReq, PingRsp
+from messages import DynamoRequestMessage, ClientPutRequestMessage, ClientPutResponseMessage, PutRequestMessage, PutResponseMessage, ClientGetRequestMessage, ClientGetResponseMessage, \
+    GetRequestMessage, GetResponseMessage, PingRequestMessage, PingResponseMessage
 from merkle import MerkleTree
 from vectorclock import VectorClock
 
@@ -36,7 +34,7 @@ class Node(BaseNode):
         self.pending_get_msg = {}
         self.pending_get_rsp = {}
 
-        self.pending_req = {PutReq: {}, GetReq: {}}
+        self.pending_req = {PutRequestMessage: {}, GetRequestMessage: {}}
         self.failed_nodes = []
         self.pending_handoffs = {}
 
@@ -62,12 +60,12 @@ class Node(BaseNode):
     def retry_failed_node(self, _):
         if self.failed_nodes:
             node = self.failed_nodes.pop(0)
-            pingmsg = PingReq(self, node)
+            pingmsg = PingRequestMessage(self, node)
             Emulation.send_message(pingmsg)
         TimerManager.start_timer(self, reason="retry", priority=15, callback=self.retry_failed_node)
 
     def process_PingReq(self, pingmsg):
-        pingrsp = PingRsp(pingmsg)
+        pingrsp = PingResponseMessage(pingmsg)
         Emulation.send_message(pingrsp)
 
     def process_PingResp(self, pingmsg):
@@ -77,7 +75,7 @@ class Node(BaseNode):
         if recovered_node in self.pending_handoffs:
             for key in self.pending_handoffs[recovered_node]:
                 (value, metadata) = self.get(key)
-                putmsg = PutReq(self, recovered_node, key, value, metadata)
+                putmsg = PutRequestMessage(self, recovered_node, key, value, metadata)
                 Emulation.send_message(putmsg)
             del self.pending_handoffs[recovered_node]
 
@@ -117,7 +115,7 @@ class Node(BaseNode):
             _logger.info("%s, %d: put %s=%s", self, seqno, msg.key, msg.value)
             metadata = copy.deepcopy(msg.metadata)
             metadata.update(self.name, seqno)
-            self.pending_req[PutReq][seqno] = set()
+            self.pending_req[PutRequestMessage][seqno] = set()
             self.pending_put_rsp[seqno] = set()
             self.pending_put_msg[seqno] = msg
             reqcount = 0
@@ -126,8 +124,8 @@ class Node(BaseNode):
                     handoff = avoided
                 else:
                     handoff = None
-                putmsg = PutReq(self, node, msg.key, msg.value, metadata, msg_id=seqno, handoff=handoff)
-                self.pending_req[PutReq][seqno].add(putmsg)
+                putmsg = PutRequestMessage(self, node, msg.key, msg.value, metadata, msg_id=seqno, handoff=handoff)
+                self.pending_req[PutRequestMessage][seqno].add(putmsg)
                 Emulation.send_message(putmsg)
                 reqcount = reqcount + 1
                 if reqcount >= Node.N:
@@ -141,13 +139,13 @@ class Node(BaseNode):
             Emulation.forward_message(msg, coordinator)
         else:
             seqno = self.generate_sequence_number()
-            self.pending_req[GetReq][seqno] = set()
+            self.pending_req[GetRequestMessage][seqno] = set()
             self.pending_get_rsp[seqno] = set()
             self.pending_get_msg[seqno] = msg
             reqcount = 0
             for node in preference_list:
-                getmsg = GetReq(self, node, msg.key, msg_id=seqno)
-                self.pending_req[GetReq][seqno].add(getmsg)
+                getmsg = GetRequestMessage(self, node, msg.key, msg_id=seqno)
+                self.pending_req[GetRequestMessage][seqno].add(getmsg)
                 Emulation.send_message(getmsg)
                 reqcount = reqcount + 1
                 if reqcount >= Node.N:
@@ -162,7 +160,7 @@ class Node(BaseNode):
                 if failed_node not in self.pending_handoffs:
                     self.pending_handoffs[failed_node] = set()
                 self.pending_handoffs[failed_node].add(putmsg.key)
-        putrsp = PutResp(putmsg)
+        putrsp = PutResponseMessage(putmsg)
         Emulation.send_message(putrsp)
 
     def process_PutResp(self, putrsp):
@@ -173,10 +171,10 @@ class Node(BaseNode):
                 _logger.info("%s: written %d copies of %s=%s so done", self, Node.W, putrsp.key, putrsp.value)
                 _logger.debug("  copies at %s", [node.name for node in self.pending_put_rsp[seqno]])
                 original_msg = self.pending_put_msg[seqno]
-                del self.pending_req[PutReq][seqno]
+                del self.pending_req[PutRequestMessage][seqno]
                 del self.pending_put_rsp[seqno]
                 del self.pending_put_msg[seqno]
-                client_putrsp = ClientPutRsp(original_msg, putrsp.metadata)
+                client_putrsp = ClientPutResponseMessage(original_msg, putrsp.metadata)
                 Emulation.send_message(client_putrsp)
         else:
             pass
@@ -184,7 +182,7 @@ class Node(BaseNode):
     def process_GetReq(self, getmsg):
         _logger.info("%s: retrieve %s=?", self, getmsg.key)
         (value, metadata) = self.get(getmsg.key)
-        getrsp = GetRsp(getmsg, value, metadata)
+        getrsp = GetResponseMessage(getmsg, value, metadata)
         Emulation.send_message(getrsp)
 
     def process_GetResp(self, getrsp):
@@ -198,33 +196,33 @@ class Node(BaseNode):
                 results = VectorClock.coalesce2([(value, metadata) for (node, value, metadata) in self.pending_get_rsp[seqno]])
 
                 original_msg = self.pending_get_msg[seqno]
-                del self.pending_req[GetReq][seqno]
+                del self.pending_req[GetRequestMessage][seqno]
                 del self.pending_get_rsp[seqno]
                 del self.pending_get_msg[seqno]
 
-                client_getrsp = ClientGetRsp(original_msg,
-                                             [value for (value, metadata) in results],
-                                             [metadata for (value, metadata) in results])
+                client_getrsp = ClientGetResponseMessage(original_msg,
+                                                         [value for (value, metadata) in results],
+                                                         [metadata for (value, metadata) in results])
                 Emulation.send_message(client_getrsp)
         else:
             pass
 
     def process_msg(self, msg):
-        if isinstance(msg, ClientPutReq):
+        if isinstance(msg, ClientPutRequestMessage):
             self.process_ClientPutReq(msg)
-        elif isinstance(msg, PutReq):
+        elif isinstance(msg, PutRequestMessage):
             self.process_PutReq(msg)
-        elif isinstance(msg, PutResp):
+        elif isinstance(msg, PutResponseMessage):
             self.process_PutResp(msg)
-        elif isinstance(msg, ClientGet):
+        elif isinstance(msg, ClientGetRequestMessage):
             self.process_ClientGetReq(msg)
-        elif isinstance(msg, GetReq):
+        elif isinstance(msg, GetRequestMessage):
             self.process_GetReq(msg)
-        elif isinstance(msg, GetRsp):
+        elif isinstance(msg, GetResponseMessage):
             self.process_GetResp(msg)
-        elif isinstance(msg, PingReq):
+        elif isinstance(msg, PingRequestMessage):
             self.process_PingReq(msg)
-        elif isinstance(msg, PingRsp):
+        elif isinstance(msg, PingResponseMessage):
             self.process_PingResp(msg)
         else:
             raise TypeError("Unexpected message type %s", msg.__class__)
@@ -251,22 +249,22 @@ class Client(BaseNode):
             metadata = VectorClock()
         else:
             metadata = VectorClock.converge(metadata)
-        putmsg = ClientPutReq(self, destnode, key, value, metadata)
+        putmsg = ClientPutRequestMessage(self, destnode, key, value, metadata)
         Emulation.send_message(putmsg)
         return putmsg
 
     def get(self, key, destnode=None):
         if destnode is None:
             destnode = random.choice(Node.node_list)
-        getmsg = ClientGet(self, destnode, key)
+        getmsg = ClientGetRequestMessage(self, destnode, key)
         Emulation.send_message(getmsg)
         return getmsg
 
     def rsp_timer_pop(self, reqmsg):
-        if isinstance(reqmsg, ClientPutReq):
+        if isinstance(reqmsg, ClientPutRequestMessage):
             _logger.info("Put request timed out; retrying")
             self.put(reqmsg.key, [reqmsg.metadata], reqmsg.value)
-        elif isinstance(reqmsg, ClientGet):
+        elif isinstance(reqmsg, ClientGetRequestMessage):
             _logger.info("Get request timed out; retrying")
             self.get(reqmsg.key)
 

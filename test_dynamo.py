@@ -1,27 +1,22 @@
 import sys
-import codecs
-import locale
 import random
 import unittest
 import logging
 
-# Wrap sys.stdout into a StreamWriter to allow writing unicode.
-# sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
-
+import messages
 from emulation import Emulation, reset_all
 from basenode import BaseNode
 from history import History
 import history
 import logconfig
 
-import dynamomessages
 import dynamo
 
 logconfig.init_logging()
 _logger = logging.getLogger('dynamo')
 
-class SimpleTestCase(unittest.TestCase):
-    """Test simple Dynamo function"""
+
+class TestDynamo(unittest.TestCase):
     def setUp(self):
         _logger.info("Reset for next test")
         reset_all()
@@ -88,7 +83,7 @@ class SimpleTestCase(unittest.TestCase):
     def test_put2_fail_initial_node2(self):
         self.put_fail_initial_node2(dynamo)
 
-    def put_fail_initial_node2(self, cls):
+    def put_fail_initial_node2(self, _):
         for _ in range(6):
             dynamo.Node()
         a = dynamo.Client('a')
@@ -234,10 +229,10 @@ class SimpleTestCase(unittest.TestCase):
 
     def test_get_put_get_put(self):
         """Show 2 x get-then-put operation"""
-        dynamomessages._show_metadata = True
+        messages._show_metadata = True
         (a, pref_list) = self.get_put_get_put()
         print(History.ladder(force_include=pref_list, spacing=16))
-        dynamomessages._show_metadata = False
+        messages._show_metadata = False
 
     def get_put_put(self, a, coordinator):
         # Assume .get_put_get_put() has happened already.
@@ -253,17 +248,17 @@ class SimpleTestCase(unittest.TestCase):
 
     def test_get_put_put(self):
         """Show get-then-put-then-put operation"""
-        dynamomessages._show_metadata = True
+        messages._show_metadata = True
         (a, pref_list) = self.get_put_get_put()
         coordinator = pref_list[0]
         from_line = len(History.history)
         self.get_put_put(a, coordinator)
         print(History.ladder(force_include=pref_list, start_line=from_line, spacing=16))
-        dynamomessages._show_metadata = False
+        messages._show_metadata = False
 
     def test_metadata_simple_fail(self):
         """Show a vector clock not mattering on simple failures"""
-        dynamomessages._show_metadata = True
+        messages._show_metadata = True
         (a, pref_list) = self.get_put_get_put()
         coordinator = pref_list[0]
         self.get_put_put(a, coordinator)
@@ -278,11 +273,11 @@ class SimpleTestCase(unittest.TestCase):
         a.get('K1', destnode=pref_list[1])
         Emulation.schedule(timers_to_process=0)
         print(History.ladder(force_include=pref_list, start_line=from_line, spacing=16))
-        dynamomessages._show_metadata = False
+        messages._show_metadata = False
 
     def partition(self):
         """Show a network partition"""
-        dynamomessages._show_metadata = True
+        messages._show_metadata = True
         cls = dynamo
         A = cls.Node()
         B = cls.Node()
@@ -323,12 +318,12 @@ class SimpleTestCase(unittest.TestCase):
         return all_nodes
 
     def test_partition(self):
-        dynamomessages._show_metadata = True
+        messages._show_metadata = True
         all_nodes = self.partition()
 
         # Display, tweaking ordering of nodes so partition is in the middle
         print(History.ladder(force_include=all_nodes, spacing=16, key=lambda x: ' ' if x.name == 'b' else x.name))
-        dynamomessages._show_metadata = False
+        messages._show_metadata = False
 
     def partition_repair(self):
         # Repair the partition
@@ -342,17 +337,18 @@ class SimpleTestCase(unittest.TestCase):
         Emulation.schedule(timers_to_process=0)
 
     def test_partition_detect(self):
-        dynamomessages._show_metadata = True
+        messages._show_metadata = True
         all_nodes = self.partition()
         from_line = len(History.history)
         self.partition_repair()
 
         # Display, tweaking ordering of nodes so partition is in the middle
-        print(History.ladder(force_include=all_nodes, start_line=from_line, spacing=16, key=lambda x: ' ' if x.name == 'b' else x.name))
-        dynamomessages._show_metadata = False
+        print(History.ladder(force_include=all_nodes, start_line=from_line, spacing=16,
+                             key=lambda x: ' ' if x.name == 'b' else x.name))
+        messages._show_metadata = False
 
     def test_partition_restore(self):
-        dynamomessages._show_metadata = True
+        messages._show_metadata = True
         all_nodes = self.partition()
         self.partition_repair()
         from_line = len(History.history)
@@ -364,8 +360,9 @@ class SimpleTestCase(unittest.TestCase):
         Emulation.schedule(timers_to_process=0)
 
         # Display, tweaking ordering of nodes so partition is in the middle
-        print(History.ladder(force_include=all_nodes, start_line=from_line, spacing=16, key=lambda x: ' ' if x.name == 'b' else x.name))
-        dynamomessages._show_metadata = False
+        print(History.ladder(force_include=all_nodes, start_line=from_line, spacing=16,
+                             key=lambda x: ' ' if x.name == 'b' else x.name))
+        messages._show_metadata = False
 
     def test_partition_detect_metadata(self):
         self.partition()

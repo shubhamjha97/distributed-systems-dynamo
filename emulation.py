@@ -5,7 +5,7 @@ from collections import deque
 from basenode import BaseNode
 from history import History
 from timer import TimerManager
-from message import ResponseMessage
+from messages import ResponseMessage
 import logconfig
 
 logconfig.init_logging()
