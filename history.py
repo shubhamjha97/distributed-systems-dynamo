@@ -1,30 +1,25 @@
-"""Code to track history of all activity"""
 from bisect import bisect
 import logging
 
 _logger = logging.getLogger('dynamo')
 
 
-class AsciiGlyphs(object):
-    """Set of glyphs to use in drawing history, in base ASCII"""
+class Glyphs:
     BLANK = ' '
     FAILED_NODE = 'x'
     OK_NODE = '.'
-    VERTICAL_LINE = '|'
-    HORIZONTAL_LINE = '-'
+    # VERTICAL_LINE = '|'
+    # HORIZONTAL_LINE = '-'
     MSG_START = 'o'
     MSG_FORWARD = '+'
-    MSG_NW = '+'
-    MSG_NE = '+'
-    MSG_SW = '+'
-    MSG_SE = '+'
+    # MSG_NW = '+'
+    # MSG_NE = '+'
+    # MSG_SW = '+'
+    # MSG_SE = '+'
     MSG_END_LEFT = '<'
     MSG_END_RIGHT = '>'
     MSG_FAIL = 'X'
     COMMENT = '*'
-
-
-class UnicodeGlyphs(AsciiGlyphs):
     VERTICAL_LINE = u'\u2502'
     HORIZONTAL_LINE = u'\u2500'
     MSG_NW = u'\u256f'
@@ -33,8 +28,7 @@ class UnicodeGlyphs(AsciiGlyphs):
     MSG_SE = u'\u256d'
 
 
-# Which set of line-drawing glyphs to use.
-GLYPHS = AsciiGlyphs
+GLYPHS = Glyphs
 
 
 class History(object):
@@ -60,21 +54,17 @@ class History(object):
 
     @classmethod
     def reset(cls):
-        """Reset the history"""
         cls.history = []
 
     @classmethod
     def add(cls, action, obj):
-        """Add an event to the historical record"""
         cls.history.append((action, obj))
 
     @classmethod
-    def nodelist(cls, force_include=None, key=lambda x: x.name):
-        """Return a list of all nodes involved in the history"""
+    def nodelist(cls, force_include=None, key=lambda x: x.node_to_name):
         nodeset = set()
         for (action, msg) in cls.history:
             if action == "send" or action == "forward":
-                # Every message must be sent, so just look at send actions
                 nodeset.add(msg.from_node)
                 nodeset.add(msg.to_node)
         if force_include is not None:
@@ -85,36 +75,25 @@ class History(object):
         return nodelist
 
     @classmethod
-    def ladder(cls, spacing=20, verbose_timers=False, start_line=0, force_include=None, key=lambda x: x.name):
-        """Generate the ladder diagram for a message history"""
-        # First spin through all of the message history to find the set of Nodes involved
+    def ladder(cls, spacing=20, verbose_timers=False, start_line=0, force_include=None, key=lambda x: x.node_to_name):
         nodelist = cls.nodelist(force_include, key=key)
         num_nodes = len(nodelist)
         included_nodes = set()
 
-        # Line make-up is like this:
-        #     0 1 2 3 4 5 6 7 8
-        #     A . . . B . . . C
-        # If m=number of cols between nodes and N=number of nodes
-        # then overall line length = ((N-1)*(m+1)) + 1
-        # (example above has N=3 m=3 => len=9=2*4+1)
         linelen = ((num_nodes - 1) * (spacing + 1)) + 1
 
-        # Figure out the column for each node
         column = {}
         for ii in range(num_nodes):
             column[nodelist[ii]] = ii * (spacing + 1)
 
-        vertlines = {}  # Current vertical lines, msg=>column
+        vertlines = {}
         failed_nodes = set()
         lines = [_header_line(nodelist, spacing)]
         lineno = 0
 
-        # Step through all of the actions
         for ii in range(len(cls.history)):
             action, msg = cls.history[ii]
             lineno = lineno + 1
-            # First, build up a line with the current set of vertical lines and leaders
             this_line = [GLYPHS.BLANK for jj in range(linelen)]
             for node, nodecol in column.items():
                 if node in included_nodes:
@@ -127,7 +106,6 @@ class History(object):
             for vertcol in vertlines.values():
                 this_line[vertcol] = GLYPHS.VERTICAL_LINE
 
-            # Now look at this particular action
             if action == "send" or action == "forward":
                 if action == "forward":
                     from_node = msg.intermediate_node
@@ -135,7 +113,6 @@ class History(object):
                 else:
                     from_node = msg.from_node
                     start_marker = GLYPHS.MSG_START
-                # Pick a suitable spot for the vertical line for this message
                 vertcol = _pick_column(vertlines, column,
                                        column[from_node], column[msg.to_node])
                 vertlines[msg] = vertcol
@@ -145,22 +122,18 @@ class History(object):
                 else:
                     end_marker = GLYPHS.MSG_SE
 
-                # Draw the horizontal line
                 _draw_horiz(this_line,
                             column[from_node], start_marker,
                             vertcol, end_marker)
-                # Add the message text
                 msgtext = str(msg)
-                if left2right:  # o----+ Text
+                if left2right:
                     _write_text(this_line, vertcol + 1, GLYPHS.BLANK + msgtext)
-                elif len(msgtext) > vertcol:  # +---o Text
+                elif len(msgtext) > vertcol:
                     _write_text(this_line, column[from_node] + 1, GLYPHS.BLANK + msgtext)
-                else:  # Text +---o
+                else:
                     _write_text(this_line, vertcol - len(msgtext) - 1, msgtext + GLYPHS.BLANK)
 
             elif action == "deliver" or action == "drop":
-                # Find the existing vertline that corresponds to this message, and
-                # remove it
                 vertcol = vertlines[msg]
                 del vertlines[msg]
 
@@ -176,13 +149,11 @@ class History(object):
                 else:
                     end_marker = GLYPHS.MSG_END_LEFT
 
-                # Draw the horizontal line
                 _draw_horiz(this_line,
                             vertcol, start_marker,
                             column[msg.to_node], end_marker)
+
             elif action == "cut":
-                # Find the existing vertline that corresponds to this message, and
-                # remove it
                 vertcol = vertlines[msg]
                 del vertlines[msg]
                 this_line[vertcol] = GLYPHS.MSG_FAIL
@@ -193,8 +164,6 @@ class History(object):
                 else:
                     continue
             elif action == "pop":
-                # In non-verbose mode, only display a timer pop if it looks like it
-                # produced some activity.
                 if ((ii + 1 < len(cls.history) and cls.history[ii + 1][0] == "send") or
                     verbose_timers):
                     _write_center(this_line, column[msg.from_node], "%s:Pop" % msg)
@@ -219,31 +188,28 @@ class History(object):
                     continue
             elif action == "remove":
                 included_nodes.remove(msg.from_node)
-                continue  # don't emit a line
+                continue
             elif action == "add":
                 included_nodes.add(msg.from_node)
-                continue  # don't emit a line
+                continue
             elif action == "announce":
                 indent = GLYPHS.COMMENT * ((linelen - len(msg) - 4) // 2)
                 if lineno > start_line:
                     lines.append(' %s %s %s ' % (indent, msg, indent))
-                continue  # line already emitted
+                continue
 
-            # Put the array of characters together into a line, and add that to the list
             if lineno > start_line:
                 lines.append(''.join(this_line))
 
-        # Build a final epilogue set of lines.  First, a header line
         lines.append(_header_line(nodelist, spacing))
-        # Now accumulate the contents information from the nodes
-        contents = {}  # node -> list of contents
+        contents = {}
         longest_conts = 0
         for node in column.keys():
             node_conts = node.content_to_str()
             contents[node] = node_conts
             if len(node_conts) > longest_conts:
                 longest_conts = len(node_conts)
-        # Now typeset it
+
         for ii in range(longest_conts):
             this_line = [GLYPHS.BLANK for jj in range(linelen)]
             for node, nodecol in column.items():
@@ -254,26 +220,22 @@ class History(object):
 
 
 def _header_line(nodelist, m):
-    """Generate header line string with m columns between nodes"""
     header_line = ''
     spacer = GLYPHS.BLANK * m
     for node in nodelist:
         if header_line != '':
             header_line = header_line + spacer
-        header_line = header_line + node.name
+        header_line = header_line + node.node_to_name
     return header_line
 
 
 def _pick_column(vertlines, columns, from_col, to_col):
-    """Pick a column in (from_col, to_col) that is not one of the entries in vertlines or columns"""
-    # Collate the disallowed columns
     not_allowed = set()
     for col in vertlines.values():
         not_allowed.add(col)
     for col in columns.values():
         not_allowed.add(col)
 
-    # Pick the first free column close to the from_col
     if from_col == to_col:
         if from_col == 0:
             candidate = from_col + 1
@@ -292,9 +254,6 @@ def _pick_column(vertlines, columns, from_col, to_col):
             return candidate
         candidate = candidate + delta
 
-    # ALTERNATIVE IMPLEMENTATION, NOT USED:
-    # Examine every possible candidate position and pick the one that is furthest
-    # from any disallowed columns
     not_allowed_list = list(not_allowed)
     not_allowed_list.sort()
     if from_col < to_col:
@@ -306,13 +265,12 @@ def _pick_column(vertlines, columns, from_col, to_col):
     best_col = -1
     best_distance = 0
     for col in range(left, xright):
-        # Calculate the distance to the nearest excluded column
         insert_point = bisect(not_allowed_list, col)
-        if insert_point > 0:  # look at not_allowed[insert_point - 1]
+        if insert_point > 0:
             dist_left = (col - not_allowed_list[insert_point - 1])
         else:
             dist_left = 99999
-        if insert_point < len(not_allowed_list):  # look at not_allowed[insert_point]
+        if insert_point < len(not_allowed_list):
             dist_right = (not_allowed_list[insert_point] - col)
         else:
             dist_right = 99999

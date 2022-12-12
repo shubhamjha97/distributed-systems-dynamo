@@ -1,29 +1,26 @@
 import copy
 
-from merkle import keyhash
+from merkle_tree import md5int
 
 
 class VectorClock(object):
     def __init__(self):
-        self.clock = {}  # node => counter
+        self.clock = {}
 
-    def update(self, node, counter):
-        """Add a new node:counter value to a VectorClock."""
-        if node in self.clock and counter <= self.clock[node]:
+    def update(self, node, timestamp):
+        if node in self.clock and timestamp <= self.clock[node]:
             raise Exception("Node %s has gone backwards from %d to %d" %
-                            (node, self.clock[node], counter))
-        self.clock[node] = counter
-        return self  # allow chaining of .update() operations
+                            (node, self.clock[node], timestamp))
+        self.clock[node] = timestamp
+        return self
 
-    def __hash__(self):  # TODO: check hashing
-        return keyhash(list(self.clock))
+    def __hash__(self):
+        return md5int(list(self.clock))
 
     def __str__(self):
         return "{%s}" % ", ".join(["%s:%d" % (node, self.clock[node])
                                    for node in sorted(self.clock.keys())])
 
-    # PART comparisons
-    # Comparison operations. Vector clocks are partially ordered, but not totally ordered.
     def __eq__(self, other):
         return self.clock == other.clock
 
@@ -47,23 +44,16 @@ class VectorClock(object):
     def __ge__(self, other):
         return (self == other) or (self > other)
 
-    # PART coalesce
     @classmethod
-    def coalesce(cls, vcs):
-        """Coalesce a container of VectorClock objects.
-
-        The result is a list of VectorClocks; each input VectorClock is a direct
-        ancestor of one of the results, and no result entry is a direct ancestor
-        of any other result entry."""
+    def combine(cls, vcs):
         results = []
         for vc in vcs:
-            # See if this vector-clock subsumes or is subsumed by anything already present
             subsumed = False
             for ii, result in enumerate(results):
-                if vc <= result:  # subsumed by existing answer
+                if vc <= result:
                     subsumed = True
                     break
-                if result < vc:  # subsumes existing answer so replace it
+                if result < vc:
                     results[ii] = copy.deepcopy(vc)
                     subsumed = True
                     break
@@ -71,26 +61,19 @@ class VectorClock(object):
                 results.append(copy.deepcopy(vc))
         return results
 
-    # PART coalesce2
     @classmethod
     def coalesce2(cls, vcs):
-        """Coalesce a container of (object, VectorClock) tuples.
-
-        The result is a list of (object, VectorClock) tuples; each input
-        VectorClock is a direct ancestor of one of the results, and no result
-        entry is a direct ancestor of any other result entry."""
         results = []
         for obj, vc in vcs:
-            if vc is None:  # Treat None as empty VectorClock
+            if vc is None:
                 vc = VectorClock()
-            # See if this vector-clock subsumes or is subsumed by anything already present
             subsumed = False
             for ii, (resultobj, resultvc) in enumerate(results):
-                if vc <= resultvc:  # subsumed by existing answer
+                if vc <= resultvc:
                     subsumed = True
                     break
 
-                if resultvc < vc:  # subsumes existing answer so replace it
+                if resultvc < vc:
                     results[ii] = (obj, copy.deepcopy(vc))
                     subsumed = True
                     break
@@ -98,10 +81,8 @@ class VectorClock(object):
                 results.append((obj, copy.deepcopy(vc)))
         return results
 
-    # PART converge
     @classmethod
     def converge(cls, vcs):
-        """Return a single VectorClock that subsumes all of the input VectorClocks"""
         result = cls()
         for vc in vcs:
             if vc is None:
@@ -119,7 +100,6 @@ import unittest
 
 
 class VectorClockTestCase(unittest.TestCase):
-    """Test vector clock class"""
 
     def setUp(self):
         self.c1 = VectorClock()
@@ -164,26 +144,23 @@ class VectorClockTestCase(unittest.TestCase):
 
     def testCoalesce(self):
         self.c1.update('B', 2)
-        self.assertEquals(VectorClock.coalesce((self.c1, self.c1, self.c1)), [self.c1])
+        self.assertEquals(VectorClock.combine((self.c1, self.c1, self.c1)), [self.c1])
         c3 = copy.deepcopy(self.c1)
         c4 = copy.deepcopy(self.c1)
-        # Diverge the two clocks
         c3.update('X', 200)
         c4.update('Y', 100)
-        # c1 < c3, c1 < c4
-        self.assertEquals(VectorClock.coalesce(((self.c1, c3, c4))), [c3, c4])
-        self.assertEquals(VectorClock.coalesce((c3, self.c1, c3, c4)), [c3, c4])
+        self.assertEquals(VectorClock.combine(((self.c1, c3, c4))), [c3, c4])
+        self.assertEquals(VectorClock.combine((c3, self.c1, c3, c4)), [c3, c4])
 
     def testConverge(self):
         self.c1.update('B', 1)
         c3 = copy.deepcopy(self.c1)
         c4 = copy.deepcopy(self.c1)
-        # Diverge two of the clocks
         c3.update('X', 200)
         self.c1.update('Y', 100)
         cx = VectorClock.converge((self.c1, self.c2, c3, c4))
         self.assertEquals(str(cx), "{A:1, B:2, X:200, Y:100}")
-        cy = VectorClock.converge(VectorClock.coalesce((self.c1, self.c2, c3, c4)))
+        cy = VectorClock.converge(VectorClock.combine((self.c1, self.c2, c3, c4)))
         self.assertEquals(str(cy), "{A:1, B:2, X:200, Y:100}")
 
 

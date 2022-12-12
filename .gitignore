@@ -1,5 +1,4 @@
-pynamo.log
-pynamo.log.*
+dynamo.log*
 .DS_Store
 __pycache__/*
 test*.out

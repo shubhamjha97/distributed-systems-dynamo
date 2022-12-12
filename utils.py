@@ -1,9 +1,8 @@
-"""Utility functions for testing"""
 import math
 import random
 
 
-def random_3letters():
+def random_3str():
     return (chr(ord('A') + random.randint(0, 25)) +
             chr(ord('A') + random.randint(0, 25)) +
             chr(ord('A') + random.randint(0, 25)))

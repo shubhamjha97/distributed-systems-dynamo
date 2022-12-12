@@ -7,16 +7,15 @@ _logger = logging.getLogger('dynamo')
 
 
 class BaseNode(object):
-    """Base class for a Dynamo node."""
     count = 0
-    node = {}  # name  -> Node
-    name = {}  # Node -> name
+    name_to_node = {}
+    node_to_name = {}
 
     @classmethod
     def reset(cls):
         cls.count = 0
-        cls.node = {}
-        cls.name = {}
+        cls.name_to_node = {}
+        cls.node_to_name = {}
 
     @classmethod
     def next_name(cls):
@@ -33,15 +32,15 @@ class BaseNode(object):
 
     def __init__(self, name=None):
         if name is None:
-            self.name = BaseNode.next_name()
+            self.node_to_name = BaseNode.next_name()
         else:
-            self.name = name
+            self.node_to_name = name
         self.next_sequence_number = 0
-        self.included = True  # Whether this node is included in lists of nodes
-        self.failed = False  # Indicates current failure
-        # Keep track of node object <-> node name
-        BaseNode.node[self.name] = self
-        BaseNode.name[self] = self.name
+        self.included = True
+        self.failed = False
+
+        BaseNode.name_to_node[self.node_to_name] = self
+        BaseNode.node_to_name[self] = self.node_to_name
         _logger.debug("Create node %s", self)
         History.add('add', InternalNodeMessage(self))
 
@@ -49,34 +48,29 @@ class BaseNode(object):
         return []
 
     def __str__(self):
-        return self.name
+        return self.node_to_name
 
     def fail(self):
-        """Mark this Node as currently failed; all messages to it will be dropped"""
         self.failed = True
         _logger.debug("Node %s fails", self)
         History.add('fail', InternalNodeMessage(self))
 
     def recover(self):
-        """Mark this Node as not failed"""
         self.failed = False
         _logger.debug("Node %s recovers", self)
         History.add('recover', InternalNodeMessage(self))
 
     def remove(self):
-        """Remove this Node from the system-wide lists of Nodes"""
         self.included = False
         _logger.debug("Node %s removed from system", self)
         History.add('remove', InternalNodeMessage(self))
 
     def restore(self):
-        """Restore this Node to the system-wide lists of Nodes"""
         self.included = True
         _logger.debug("Node %s restored to system", self)
         History.add('add', InternalNodeMessage(self))
 
-    def generate_sequence_number(self):
-        """Generate next sequence number for this Node"""
+    def get_next_sequence_number(self):
         self.next_sequence_number = self.next_sequence_number + 1
         return self.next_sequence_number
 

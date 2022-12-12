@@ -6,24 +6,21 @@ def md5string(key):
     return hashlib.md5(str(key).encode("utf-8"))
 
 
-def keyhash(key):
-    """Return a 128-bit integer associated with a key"""
-    hashval = md5string(key)
-    return int(hashval.hexdigest(), 16)
+def md5int(key):
+    hash_str = md5string(key)
+    return int(hash_str.hexdigest(), 16)
 
 
-# PART coretree
 class MerkleTreeNode(object):
     def __init__(self):
         self.value = None
         self.parent = None
 
-    def recalc(self):
-        raise NotImplementedError("Subclasses should implement this method")
+    def recalc_node_val(self):
+        raise NotImplementedError
 
 
 class MerkleBranchNode(MerkleTreeNode):
-    """Interior node in Merkle tree"""
 
     def __init__(self, left, right):
         super(MerkleBranchNode, self).__init__()
@@ -31,28 +28,24 @@ class MerkleBranchNode(MerkleTreeNode):
         left.parent = self
         self.right = right
         right.parent = self
-        self.recalc()
+        self.recalc_node_val()
 
-    def recalc(self):
-        """Recalculate the Merkle value for this node, and all parent nodes"""
-        # Node value is hash of two children's hash values concatenated
+    def recalc_node_val(self):
         self.value = hashlib.md5(self.left.value.digest() + self.right.value.digest())
         if self.parent is not None:
-            self.parent.recalc()
+            self.parent.recalc_node_val()
 
     def __str__(self):
         return self.value.hexdigest()[:6]
 
 
-# PART leafnode
 class MerkleLeaf(MerkleTreeNode):
-    """Leaf node in Merkle tree, encompassing all keys in subrange [min_key, max_key)"""
 
     def __init__(self, min_key, max_key, initdata=None):
         super(MerkleLeaf, self).__init__()
         self.min_key = min_key
         self.max_key = max_key
-        # Copy in any keys whose hash falls in range for this node
+
         if initdata is None:
             self._data = {}
         else:
@@ -63,37 +56,28 @@ class MerkleLeaf(MerkleTreeNode):
         return "[%s,%s)=>%s" % (self.min_key, self.max_key, self.value.hexdigest()[:6])
 
     def _inrange(self, key):
-        """Determine whether the given key falls within the subrange of this leaf node"""
-        hashval = keyhash(key)
+        hashval = md5int(key)
         return hashval >= self.min_key and hashval < self.max_key
 
-    def recalc(self):
-        """Recalculate the Merkle value for this node, and all parent nodes"""
+    def recalc_node_val(self):
         self.value = md5string(self._data)
-        self.parent.recalc()
+        self.parent.recalc_node_val()
 
 
-# PART tree
 class MerkleTree(MutableMapping):
     def __init__(self, depth=12, min_key=0, max_key=(2 ** 128 - 1), initdata=None):
-        """Build a Merkle tree of given depth covering keys in range [min_key, max_key)"""
         self.min_key = min_key
         self.max_key = max_key
         self.depth = depth
-        # There are 2^depth leaves in the tree.
         self.num_leaves = 2 ** self.depth
         self.leaf_size = ((self.max_key - self.min_key) + self.num_leaves - 1) // self.num_leaves
 
-        # nodes is an array of (depth+1) lists; each list is a layer of the tree
         self.nodes = []
-        # layer 0 (bottom) of the tree is (2^depth) leaf nodes
         self.nodes.append([MerkleLeaf(self.min_key + ii * self.leaf_size,
                                       min(self.min_key + (ii + 1) * self.leaf_size,
                                           max_key),
                                       initdata)
                            for ii in range(self.num_leaves)])
-        # Each layer >= 1 consists of interior nodes, and is half the size
-        # of the layer below.  Each interior node is built from two nodes below it
         level = 1
         while level <= self.depth:
             self.nodes.append([MerkleBranchNode(self.nodes[level - 1][2 * ii],
@@ -102,31 +86,29 @@ class MerkleTree(MutableMapping):
             level = level + 1
         self.root = self.nodes[-1][0]
 
-    # PART container
-    def _findleaf(self, key):
-        """Return the index of the leaf node corresponding to the given key"""
-        hashval = keyhash(key)
+    def _lookup(self, key):
+        hashval = md5int(key)
         if hashval < self.min_key or hashval >= self.max_key:
             raise KeyError("Key %s hashes to value outside range for this tree" % key)
         return hashval // self.leaf_size
 
     def __setitem__(self, key, value):
-        leafidx = self._findleaf(key)
+        leafidx = self._lookup(key)
         self.nodes[0][leafidx]._data[key] = value
-        self.nodes[0][leafidx].recalc()
+        self.nodes[0][leafidx].recalc_node_val()
 
     def __delitem__(self, key):
-        leafidx = self._findleaf(key)
+        leafidx = self._lookup(key)
         del self.nodes[0][leafidx]._data[key]
-        self.nodes[0][leafidx].recalc()
+        self.nodes[0][leafidx].recalc_node_val()
 
     def __getitem__(self, key):
-        leafidx = self._findleaf(key)
+        leafidx = self._lookup(key)
         return self.nodes[0][leafidx]._data[key]
 
     def __contains__(self, key):
-        leafidx = self._findleaf(key)
-        return (key in self.nodes[0][leafidx]._data)
+        leafidx = self._lookup(key)
+        return key in self.nodes[0][leafidx]._data
 
     def keys(self):
         results = []
@@ -142,36 +124,33 @@ class MerkleTree(MutableMapping):
     def iteritems(self):
         for leafidx in range(self.num_leaves):
             for key, value in self.nodes[0][leafidx]._data.items():
-                yield (key, value)
+                yield key, value
 
     def __len__(self):
         return self.num_leaves
 
-    # PART debugoutput
     def __str__(self):
         result = ""
-        for level, list in enumerate(self.nodes):
+        for level, nodelist in enumerate(self.nodes):
             result = result + "[%d] " % level
-            for node in list:
+            for node in nodelist:
                 result = result + str(node) + ' '
             result = result + '\n'
         return result
 
 
-# -----------IGNOREBEYOND: test code ---------------
 import sys
 import copy
 import random
 import unittest
 
-from testutils import random_3letters
+from utils import random_3str
 
 
 class MerkleTestCase(unittest.TestCase):
-    """Test Merkle tree implementation"""
 
     def setUp(self):
-        self.keystore = dict((random_3letters(), random.randint(0, 99)) for ii in range(50))
+        self.keystore = dict((random_3str(), random.randint(0, 99)) for _ in range(50))
         self.keya = int(hashlib.md5('A').hexdigest(), 16)
         self.keyb = int(hashlib.md5('B').hexdigest(), 16)
         if self.keya < self.keyb:
@@ -201,7 +180,6 @@ class MerkleTestCase(unittest.TestCase):
         x1R = x1t.right
         x2L = x2t.left
         x2R = x2t.right
-        # Exactly one of the LL or RR pairs differ
         if x1L.value.hexdigest() == x2L.value.hexdigest():
             self.assertNotEqual(x1R.value.hexdigest(), x2R.value.hexdigest())
         else:
@@ -210,9 +188,9 @@ class MerkleTestCase(unittest.TestCase):
 
     def testLeafIdx(self):
         x = MerkleTree()
-        for ii in range(10000):
-            key = random_3letters()
-            leafidx = x._findleaf(key)
+        for _ in range(10000):
+            key = random_3str()
+            leafidx = x._lookup(key)
             if not x.nodes[0][leafidx]._inrange(key):
                 raise KeyError("Key %s hashes to value outside range for this leaf" % key)
 
@@ -259,16 +237,16 @@ class MerkleTestCase(unittest.TestCase):
         self.assertEqual(d1.popitem(), ('c', 3))
 
         d2.update({'x': 8, 'y': 9})
-        self.assertEqual(set(('a', 'b', 'c', 'x', 'y')),
+        self.assertEqual({'a', 'b', 'c', 'x', 'y'},
                          set(d2.keys()))
         d2.update((('u', 10), ('v', 11), ('w', 12)))
-        self.assertEqual(set(('a', 'b', 'c', 'u', 'v', 'w', 'x', 'y')),
+        self.assertEqual({'a', 'b', 'c', 'u', 'v', 'w', 'x', 'y'},
                          set(d2.keys()))
 
 
 if __name__ == "__main__":
     ii = 1
-    while ii < len(sys.argv):  # pragma: no cover
+    while ii < len(sys.argv):
         arg = sys.argv[ii]
         if arg == "-s" or arg == "--seed":
             random.seed(sys.argv[ii + 1])

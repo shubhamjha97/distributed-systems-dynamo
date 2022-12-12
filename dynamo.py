@@ -6,10 +6,10 @@ import logconfig
 from basenode import BaseNode
 from timer import TimerManager
 from emulation import Emulation
-from hash_multiple import ConsistentHashTable
+from consistent_hash import ConsistentHashTable
 from messages import DynamoRequestMessage, ClientPutRequestMessage, ClientPutResponseMessage, PutRequestMessage, PutResponseMessage, ClientGetRequestMessage, ClientGetResponseMessage, \
     GetRequestMessage, GetResponseMessage, PingRequestMessage, PingResponseMessage
-from merkle import MerkleTree
+from merkle_tree import MerkleTree
 from vectorclock import VectorClock
 
 logconfig.init_logging()
@@ -18,10 +18,11 @@ _logger = logging.getLogger('dynamo')
 
 class Node(BaseNode):
     timer_priority = 20
-    T = 10  # Number of repeats for nodes in consistent hash table
-    N = 3  # Number of nodes to replicate at
-    W = 2  # Number of nodes that need to reply to a write operation
-    R = 2  # Number of nodes that need to reply to a read operation
+    T = 10  # Repeats in consistent hash circle
+    N = 3  # Replication factor
+    R = 2  # Read acks
+    W = 2  # Write acks
+
     node_list = []
     consistent_hash_tbl = ConsistentHashTable(node_list, T)
 
@@ -34,7 +35,7 @@ class Node(BaseNode):
         self.pending_get_msg = {}
         self.pending_get_rsp = {}
 
-        self.pending_req = {PutRequestMessage: {}, GetRequestMessage: {}}
+        self.pending_requests = {PutRequestMessage: {}, GetRequestMessage: {}}
         self.failed_nodes = []
         self.pending_handoffs = {}
 
@@ -82,7 +83,7 @@ class Node(BaseNode):
     def rsp_timer_pop(self, reqmsg):
         _logger.info("Node %s now treating node %s as failed", self, reqmsg.to_node)
         self.failed_nodes.append(reqmsg.to_node)
-        failed_requests = Emulation.cancel_timers_to(reqmsg.to_node)
+        failed_requests = Emulation.cancel_timers_for_node(reqmsg.to_node)
         failed_requests.append(reqmsg)
         for failedmsg in failed_requests:
             self.retry_request(failedmsg)
@@ -94,12 +95,12 @@ class Node(BaseNode):
         preference_list = Node.consistent_hash_tbl.find_nodes(reqmsg.key, Node.N, self.failed_nodes)[0]
         kls = reqmsg.__class__
 
-        if kls in self.pending_req and reqmsg.msg_id in self.pending_req[kls]:
+        if kls in self.pending_requests and reqmsg.msg_id in self.pending_requests[kls]:
             for node in preference_list:
-                if node not in [req.to_node for req in self.pending_req[kls][reqmsg.msg_id]]:
+                if node not in [req.to_node for req in self.pending_requests[kls][reqmsg.msg_id]]:
                     newreqmsg = copy.copy(reqmsg)
                     newreqmsg.to_node = node
-                    self.pending_req[kls][reqmsg.msg_id].add(newreqmsg)
+                    self.pending_requests[kls][reqmsg.msg_id].add(newreqmsg)
                     Emulation.send_message(newreqmsg)
 
     def process_ClientPutReq(self, msg):
@@ -111,11 +112,11 @@ class Node(BaseNode):
             coordinator = preference_list[0]
             Emulation.forward_message(msg, coordinator)
         else:
-            seqno = self.generate_sequence_number()
+            seqno = self.get_next_sequence_number()
             _logger.info("%s, %d: put %s=%s", self, seqno, msg.key, msg.value)
             metadata = copy.deepcopy(msg.metadata)
-            metadata.update(self.name, seqno)
-            self.pending_req[PutRequestMessage][seqno] = set()
+            metadata.update(self.node_to_name, seqno)
+            self.pending_requests[PutRequestMessage][seqno] = set()
             self.pending_put_rsp[seqno] = set()
             self.pending_put_msg[seqno] = msg
             reqcount = 0
@@ -125,7 +126,7 @@ class Node(BaseNode):
                 else:
                     handoff = None
                 putmsg = PutRequestMessage(self, node, msg.key, msg.value, metadata, msg_id=seqno, handoff=handoff)
-                self.pending_req[PutRequestMessage][seqno].add(putmsg)
+                self.pending_requests[PutRequestMessage][seqno].add(putmsg)
                 Emulation.send_message(putmsg)
                 reqcount = reqcount + 1
                 if reqcount >= Node.N:
@@ -138,14 +139,14 @@ class Node(BaseNode):
             coordinator = preference_list[0]
             Emulation.forward_message(msg, coordinator)
         else:
-            seqno = self.generate_sequence_number()
-            self.pending_req[GetRequestMessage][seqno] = set()
+            seqno = self.get_next_sequence_number()
+            self.pending_requests[GetRequestMessage][seqno] = set()
             self.pending_get_rsp[seqno] = set()
             self.pending_get_msg[seqno] = msg
             reqcount = 0
             for node in preference_list:
                 getmsg = GetRequestMessage(self, node, msg.key, msg_id=seqno)
-                self.pending_req[GetRequestMessage][seqno].add(getmsg)
+                self.pending_requests[GetRequestMessage][seqno].add(getmsg)
                 Emulation.send_message(getmsg)
                 reqcount = reqcount + 1
                 if reqcount >= Node.N:
@@ -169,9 +170,9 @@ class Node(BaseNode):
             self.pending_put_rsp[seqno].add(putrsp.from_node)
             if len(self.pending_put_rsp[seqno]) >= Node.W:
                 _logger.info("%s: written %d copies of %s=%s so done", self, Node.W, putrsp.key, putrsp.value)
-                _logger.debug("  copies at %s", [node.name for node in self.pending_put_rsp[seqno]])
+                _logger.debug("  copies at %s", [node.node_to_name for node in self.pending_put_rsp[seqno]])
                 original_msg = self.pending_put_msg[seqno]
-                del self.pending_req[PutRequestMessage][seqno]
+                del self.pending_requests[PutRequestMessage][seqno]
                 del self.pending_put_rsp[seqno]
                 del self.pending_put_msg[seqno]
                 client_putrsp = ClientPutResponseMessage(original_msg, putrsp.metadata)
@@ -191,12 +192,12 @@ class Node(BaseNode):
             self.pending_get_rsp[seqno].add((getrsp.from_node, getrsp.value, getrsp.metadata))
             if len(self.pending_get_rsp[seqno]) >= Node.R:
                 _logger.info("%s: read %d copies of %s=? so done", self, Node.R, getrsp.key)
-                _logger.debug("  copies at %s", [(node.name, value) for (node, value, _) in self.pending_get_rsp[seqno]])
+                _logger.debug("  copies at %s", [(node.node_to_name, value) for (node, value, _) in self.pending_get_rsp[seqno]])
 
                 results = VectorClock.coalesce2([(value, metadata) for (node, value, metadata) in self.pending_get_rsp[seqno]])
 
                 original_msg = self.pending_get_msg[seqno]
-                del self.pending_req[GetRequestMessage][seqno]
+                del self.pending_requests[GetRequestMessage][seqno]
                 del self.pending_get_rsp[seqno]
                 del self.pending_get_msg[seqno]
 

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-"""Consistent hash code"""
 import hashlib
 import binascii
 import bisect
@@ -7,37 +5,24 @@ import bisect
 
 class ConsistentHashTable(object):
     def __init__(self, nodelist, repeat):
-        """Initialize a consistent hash table for the given list of nodes"""
-        # Insert each node into the hash circle multiple times
         baselist = []
         for node in nodelist:
-            for ii in range(repeat):
-                nodestring = "%s:%d" % (node, ii)
+            for i in range(repeat):
+                nodestring = "%s:%d" % (node, i)
                 baselist.append((hashlib.md5(nodestring.encode("utf-8")).digest(), node))
-        # Build two lists: one of (hashvalue, node) pairs, sorted by
-        # hashvalue, one of just the hashvalues, to allow use of bisect.
         self.nodelist = sorted(baselist, key=lambda x: x[0])
         self.hashlist = [hashnode[0] for hashnode in self.nodelist]
 
     def find_nodes(self, key, count=1, avoid=None):
-        """Return a list of count nodes from the hash table that are
-        consecutively after the hash of the given key, together with
-        those nodes from the avoid collection that have been avoided.
-
-        Returned list size is <= count, and any nodes in the avoid collection
-        are not included."""
-        if avoid is None:  # Use an empty set
+        if avoid is None:
             avoid = set()
-        # Hash the key to find where it belongs on the ring
         hv = hashlib.md5(str(key).encode("utf-8")).digest()
-        # Find the node after this hash value around the ring, as an index
-        # into self.hashlist/self.nodelist
         initial_index = bisect.bisect(self.hashlist, hv)
         next_index = initial_index
         results = []
         avoided = []
         while len(results) < count:
-            if next_index == len(self.nodelist):  # Wrap round to the start
+            if next_index == len(self.nodelist):
                 next_index = 0
             node = self.nodelist[next_index][1]
             if node in avoid:
@@ -47,7 +32,6 @@ class ConsistentHashTable(object):
                 results.append(node)
             next_index = next_index + 1
             if next_index == initial_index:
-                # Gone all the way around -- terminate loop regardless
                 break
         return results, avoided
 
@@ -56,24 +40,22 @@ class ConsistentHashTable(object):
                          (binascii.hexlify(nodeinfo[0]), nodeinfo[1])
                          for nodeinfo in self.nodelist])
 
-# -----------IGNOREBEYOND: test code ---------------
 import sys
 import random
 import unittest
-from testutils import random_3letters, Stats
+from utils import random_3str, Stats
 
 NODE_REPEAT = 10
 
 
 class HashMultipleTestCase(unittest.TestCase):
-    """Test consistent hash utility that uses multiple virtual nodes"""
 
     def setUp(self):
         self.c1 = ConsistentHashTable(('A', 'B', 'C'), 2)
         num_nodes = 50
         self.nodeset = set()
         while len(self.nodeset) < num_nodes:
-            node = random_3letters()
+            node = random_3str()
             self.nodeset.add(node)
         self.c2 = ConsistentHashTable(self.nodeset, NODE_REPEAT)
 
@@ -106,11 +88,10 @@ class HashMultipleTestCase(unittest.TestCase):
         self.assertEqual(len(x), 15)
 
     def testDistribution(self):
-        """Generate a lot of hash values and see how even the distribution is"""
         nodecount = dict([(node, 0) for node in self.nodeset])
         numkeys = 10000
         for _ in range(numkeys):
-            node = self.c2.find_nodes(random_3letters(), 1)[0][0]
+            node = self.c2.find_nodes(random_3str(), 1)[0][0]
             nodecount[node] = nodecount[node] + 1
         stats = Stats()
         for node, count in nodecount.items():
@@ -122,7 +103,6 @@ class HashMultipleTestCase(unittest.TestCase):
                (numkeys, len(self.nodeset), NODE_REPEAT, stats.stddev(), numkeys / len(self.nodeset)))
 
     def testFailover(self):
-        """For a given unavailable node, see what other nodes get new traffic"""
         transfer = {}
         for from_node in self.nodeset:
             transfer[from_node] = {}
@@ -130,7 +110,7 @@ class HashMultipleTestCase(unittest.TestCase):
                 transfer[from_node][to_node] = 0
         numkeys = 10000
         for _ in range(numkeys):
-            key = random_3letters()
+            key = random_3str()
             node_pair = self.c2.find_nodes(key, 2)[0]
             transfer[node_pair[0]][node_pair[1]] = transfer[node_pair[0]][node_pair[1]] + 1
         stats = Stats()
@@ -147,7 +127,7 @@ class HashMultipleTestCase(unittest.TestCase):
 
 if __name__ == "__main__":
     ii = 1
-    while ii < len(sys.argv):  # pragma: no cover
+    while ii < len(sys.argv):
         arg = sys.argv[ii]
         if arg == "-s" or arg == "--seed":
             random.seed(sys.argv[ii + 1])

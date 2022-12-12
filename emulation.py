@@ -13,36 +13,33 @@ _logger = logging.getLogger('dynamo')
 
 
 class Emulation(object):
-    cuts = []  # List of incommunicado sets of nodes
-    queue = deque([])  # queue of pending messages
-    pending_timers = {}  # request_message => timer
+    unreachable_nodes = []
+    pending_msg_queue = deque([])
+    pending_timers = {}
 
     @classmethod
     def reset(cls):
-        cls.cuts = []
-        cls.queue = deque([])
+        cls.unreachable_nodes = []
+        cls.pending_msg_queue = deque([])
         cls.pending_timers = {}
 
     @classmethod
-    def cut_wires(cls, from_nodes, to_nodes):
+    def disconnect(cls, from_nodes, to_nodes):
         History.add("announce", "Cut %s -> %s" % ([str(x) for x in from_nodes], [str(x) for x in to_nodes]))
-        cls.cuts.append((from_nodes, to_nodes))
+        cls.unreachable_nodes.append((from_nodes, to_nodes))
 
     @classmethod
-    def reachable(cls, from_node, to_node):
-        for (from_nodes, to_nodes) in cls.cuts:
+    def is_reachable(cls, from_node, to_node):
+        for (from_nodes, to_nodes) in cls.unreachable_nodes:
             if from_node in from_nodes and to_node in to_nodes:
                 return False
         return True
 
     @classmethod
     def send_message(cls, msg, expect_reply=True):
-        """Send a message"""
         _logger.info("Enqueue %s->%s: %s", msg.from_node, msg.to_node, msg)
-        cls.queue.append(msg)
+        cls.pending_msg_queue.append(msg)
         History.add("send", msg)
-        # Automatically run timers for request messages if the sender can cope
-        # with retry timer pops
         if (expect_reply and
             not isinstance(msg, ResponseMessage) and
             'rsp_timer_pop' in msg.from_node.__class__.__dict__ and
@@ -50,106 +47,89 @@ class Emulation(object):
             cls.pending_timers[msg] = TimerManager.start_timer(msg.from_node, reason=msg, callback=Emulation.rsp_timer_pop)
 
     @classmethod
-    def remove_req_timer(cls, reqmsg):
-        if reqmsg in cls.pending_timers:
-            # Cancel request timer as we've seen a response
-            TimerManager.cancel_timer(cls.pending_timers[reqmsg])
-            del cls.pending_timers[reqmsg]
+    def cancel_req_timer(cls, timer_msg):
+        if timer_msg in cls.pending_timers:
+            TimerManager.cancel_timer(cls.pending_timers[timer_msg])
+            del cls.pending_timers[timer_msg]
 
     @classmethod
-    def cancel_timers_to(cls, destnode):
-        """Cancel all pending-request timers destined for the given node.
-        Returns a list of the request messages whose timers have been cancelled."""
+    def cancel_timers_for_node(cls, dest):
         failed_requests = []
         pending_timers_keys = list(cls.pending_timers.keys())
-        for reqmsg in pending_timers_keys:
-            if reqmsg.to_node == destnode:
-                TimerManager.cancel_timer(cls.pending_timers[reqmsg])
-                del cls.pending_timers[reqmsg]
-                failed_requests.append(reqmsg)
+        for timer_msg in pending_timers_keys:
+            if timer_msg.to_node == dest:
+                TimerManager.cancel_timer(cls.pending_timers[timer_msg])
+                del cls.pending_timers[timer_msg]
+                failed_requests.append(timer_msg)
         return failed_requests
 
     @classmethod
-    def rsp_timer_pop(cls, reqmsg):
-        # Remove the record of the pending timer
-        del cls.pending_timers[reqmsg]
-        # Call through to the node's rsp_timer_pop() method
-        _logger.debug("Call on to rsp_timer_pop() for node %s" % reqmsg.from_node)
-        reqmsg.from_node.rsp_timer_pop(reqmsg)
+    def rsp_timer_pop(cls, timer_msg):
+        del cls.pending_timers[timer_msg]
+        _logger.debug("Call on to rsp_timer_pop() for node %s" % timer_msg.from_node)
+        timer_msg.from_node.rsp_timer_pop(timer_msg)
 
     @classmethod
-    def forward_message(cls, msg, new_to_node):
-        """Forward a message"""
-        _logger.info("Enqueue(fwd) %s->%s: %s", msg.to_node, new_to_node, msg)
+    def forward_message(cls, msg, to_node):
+        _logger.info("Enqueue(fwd) %s->%s: %s", msg.to_node, to_node, msg)
         fwd_msg = copy.copy(msg)
         fwd_msg.intermediate_node = fwd_msg.to_node
         fwd_msg.original_msg = msg
-        fwd_msg.to_node = new_to_node
-        cls.queue.append(fwd_msg)
+        fwd_msg.to_node = to_node
+        cls.pending_msg_queue.append(fwd_msg)
         History.add("forward", fwd_msg)
 
     @classmethod
-    def schedule(cls, msgs_to_process=None, timers_to_process=None):
-        """Schedule given number of pending messages"""
+    def run(cls, msgs_to_process=None, timers_to_process=None):
         if msgs_to_process is None:
             msgs_to_process = 32768
         if timers_to_process is None:
             timers_to_process = 32768
 
-        while cls._work_to_do():
+        while cls._msgs_remaining():
             _logger.info("Start of schedule: %d (limit %d) pending messages, %d (limit %d) pending timers",
-                         len(cls.queue), msgs_to_process, TimerManager.pending_count(), timers_to_process)
-            # Process all the queued up messages (which may enqueue more along the way)
-            while cls.queue:
-                msg = cls.queue.popleft()
+                         len(cls.pending_msg_queue), msgs_to_process, TimerManager.pending_count(), timers_to_process)
+            while cls.pending_msg_queue:
+                msg = cls.pending_msg_queue.popleft()
                 if msg.to_node.failed:
                     _logger.info("Drop %s->%s: %s as destination down", msg.from_node, msg.to_node, msg)
                     History.add("drop", msg)
-                elif not Emulation.reachable(msg.from_node, msg.to_node):
+                elif not Emulation.is_reachable(msg.from_node, msg.to_node):
                     _logger.info("Drop %s->%s: %s as route down", msg.from_node, msg.to_node, msg)
                     History.add("cut", msg)
                 else:
                     _logger.info("Dequeue %s->%s: %s", msg.from_node, msg.to_node, msg)
                     if isinstance(msg, ResponseMessage):
-                        # figure out the original request this is a response to
                         try:
                             reqmsg = msg.response_to.original_msg
                         except Exception:
                             reqmsg = msg.response_to
-                        # cancel any timer associated with the original request
-                        cls.remove_req_timer(reqmsg)
+                        cls.cancel_req_timer(reqmsg)
                     History.add("deliver", msg)
                     msg.to_node.process_msg(msg)
                 msgs_to_process = msgs_to_process - 1
                 if msgs_to_process == 0:
                     return
 
-            # No pending messages; potentially pop a (single) timer
             if TimerManager.pending_count() > 0 and timers_to_process > 0:
-                # Pop the first pending timer; this may enqueue work
                 TimerManager.pop_timer()
                 timers_to_process = timers_to_process - 1
             if timers_to_process == 0:
                 return
 
     @classmethod
-    def _work_to_do(cls):
-        """Indicate whether there is work to do"""
-        if cls.queue:
-            return True
-        if TimerManager.pending_count() > 0:
+    def _msgs_remaining(cls):
+        if cls.pending_msg_queue or TimerManager.pending_count() > 0:
             return True
         return False
 
 
 def reset():
-    """Reset all message and other history"""
     Emulation.reset()
     TimerManager.reset()
     History.reset()
 
 
 def reset_all():
-    """Reset all message and other history, and remove all nodes"""
     reset()
     BaseNode.reset()
